@@ -10,6 +10,7 @@ const App = () => {
     <Router>
       <div className="container">
        <h1>부서 관리 시스템</h1>
+       <h1>부서 관리 시스템</h1>
         <Routes>
           <Route path="/" element={<EmployeeList />} />
           <Route path="/view/:id" element={<EmployeeDetail />} />
