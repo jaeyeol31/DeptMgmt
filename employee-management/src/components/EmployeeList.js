@@ -4,24 +4,45 @@ import EmployeeService from '../services/EmployeeService';
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
 
   useEffect(() => {
     EmployeeService.getAllEmployees().then((response) => {
       setEmployees(response.data);
+      setFilteredEmployees(response.data); // 초기 로드 시 모든 직원 표시
     });
   }, []);
+
+  // 검색어 변경 시 필터링 로직
+  useEffect(() => {
+    const results = employees.filter((employee) =>
+      employee.ename.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredEmployees(results);
+  }, [searchTerm, employees]);
 
   const deleteEmployee = (id) => {
     EmployeeService.deleteEmployee(id).then(() => {
       setEmployees(employees.filter(employee => employee.empno !== id));
+      setFilteredEmployees(filteredEmployees.filter(employee => employee.empno !== id)); // 필터링된 목록에서도 제거
     });
   };
 
   return (
     <div>
       <h2>직원 목록</h2>
+      <div className="mb-3">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="이름으로 검색"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
       <Link to="/add" className="btn btn-primary">직원 추가</Link>
-      <table className="table table-striped">
+      <table className="table table-striped mt-3">
         <thead>
           <tr>
             <th>아이디</th>
@@ -32,7 +53,7 @@ const EmployeeList = () => {
           </tr>
         </thead>
         <tbody>
-          {employees.map(employee => (
+          {filteredEmployees.map(employee => (
             <tr key={employee.empno}>
               <td>{employee.empno}</td>
               <td>{employee.ename}</td>
