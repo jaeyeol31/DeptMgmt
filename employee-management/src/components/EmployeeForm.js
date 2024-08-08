@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import EmployeeService from '../services/EmployeeService';
+import { departmentMap, getManagerDeptNo } from '../constants';
 
 const EmployeeForm = () => {
   const { id } = useParams();
@@ -14,11 +15,20 @@ const EmployeeForm = () => {
     comm: '',
     deptno: ''
   });
+  const [managerName, setManagerName] = useState('');
+  const departments = Object.keys(departmentMap).map(deptno => ({
+    deptno: parseInt(deptno),
+    name: departmentMap[deptno].name
+  }));
 
   useEffect(() => {
     if (id) {
       EmployeeService.getEmployeeById(id).then((response) => {
         setEmployee(response.data);
+        const managerDeptNo = getManagerDeptNo(response.data.deptno);
+        if (managerDeptNo) {
+          EmployeeService.getManagerName(managerDeptNo).then(name => setManagerName(name));
+        }
       });
     }
   }, [id]);
@@ -26,6 +36,21 @@ const EmployeeForm = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEmployee({ ...employee, [name]: value });
+  };
+
+  const handleDepartmentChange = (e) => {
+    const selectedDeptno = parseInt(e.target.value);
+    const mgrDeptNo = getManagerDeptNo(selectedDeptno);
+    setEmployee({
+      ...employee,
+      deptno: selectedDeptno,
+      mgr: mgrDeptNo
+    });
+    if (mgrDeptNo) {
+      EmployeeService.getManagerName(mgrDeptNo).then(name => setManagerName(name));
+    } else {
+      setManagerName('');
+    }
   };
 
   const handleSubmit = (e) => {
@@ -69,12 +94,29 @@ const EmployeeForm = () => {
           />
         </div>
         <div className="form-group">
-          <label>담당 매니저</label>
+          <label>부서</label>
+          <select
+            name="deptno"
+            value={employee.deptno}
+            onChange={handleDepartmentChange}
+            className="form-control"
+            required
+          >
+            <option value="">부서를 선택하세요</option>
+            {departments.map(dept => (
+              <option key={dept.deptno} value={dept.deptno}>
+                {dept.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="form-group">
+          <label>매니저</label>
           <input
-            type="number"
-            name="mgr"
-            value={employee.mgr || ''}
-            onChange={handleChange}
+            type="text"
+            name="mgrName"
+            value={managerName}
+            readOnly
             className="form-control"
           />
         </div>
@@ -108,17 +150,6 @@ const EmployeeForm = () => {
             value={employee.comm}
             onChange={handleChange}
             className="form-control"
-          />
-        </div>
-        <div className="form-group">
-          <label>부서</label>
-          <input
-            type="number"
-            name="deptno"
-            value={employee.deptno}
-            onChange={handleChange}
-            className="form-control"
-            required
           />
         </div>
         <button type="submit" className="btn btn-primary">저장</button>

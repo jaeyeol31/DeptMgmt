@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import EmployeeService from '../services/EmployeeService';
+import { getDepartmentName, getManagerDeptNo } from '../constants';
 
-// 직원 상세 정보를 보여주는 컴포넌트
 const EmployeeDetail = () => {
-  const { id } = useParams(); // URL에서 ID 파라미터를 가져옴
-  const [employee, setEmployee] = useState(null); // 직원 정보 상태
+  const { id } = useParams();
+  const [employee, setEmployee] = useState(null);
+  const [managerName, setManagerName] = useState('');
 
-  // 직원 ID가 변경될 때마다 해당 직원의 정보를 가져옴
   useEffect(() => {
     EmployeeService.getEmployeeById(id).then((response) => {
       setEmployee(response.data);
+      const managerDeptNo = getManagerDeptNo(response.data.deptno);
+      if (managerDeptNo) {
+        EmployeeService.getManagerName(managerDeptNo).then(name => setManagerName(name));
+      }
     });
   }, [id]);
 
@@ -37,7 +41,7 @@ const EmployeeDetail = () => {
           </tr>
           <tr>
             <th>담당 매니저</th>
-            <td>{employee.mgr}</td>
+            <td>{managerName}</td>
           </tr>
           <tr>
             <th>입사일</th>
@@ -53,7 +57,7 @@ const EmployeeDetail = () => {
           </tr>
           <tr>
             <th>부서</th>
-            <td>{employee.deptno}</td>
+            <td>{getDepartmentName(employee.deptno)}</td>
           </tr>
         </tbody>
       </table>

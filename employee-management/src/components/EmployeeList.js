@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import EmployeeService from '../services/EmployeeService';
+import { getDepartmentName } from '../constants';
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
@@ -14,7 +15,6 @@ const EmployeeList = () => {
     });
   }, []);
 
-  // 검색어 변경 시 필터링 로직
   useEffect(() => {
     const results = employees.filter((employee) =>
       employee.ename.toLowerCase().includes(searchTerm.toLowerCase())
@@ -58,7 +58,7 @@ const EmployeeList = () => {
               <td>{employee.empno}</td>
               <td>{employee.ename}</td>
               <td>{employee.job}</td>
-              <td>{employee.deptno}</td>
+              <td>{getDepartmentName(employee.deptno)}</td>
               <td>
                 <Link to={`/view/${employee.empno}`} className="btn btn-info">보기</Link>
                 <Link to={`/edit/${employee.empno}`} className="btn btn-warning">수정</Link>

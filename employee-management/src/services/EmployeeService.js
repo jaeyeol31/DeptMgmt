@@ -22,6 +22,13 @@ class EmployeeService {
   deleteEmployee(id) {
     return axios.delete(`${EMPLOYEE_API_BASE_URL}/${id}`);
   }
+
+  getManagerName(deptno) {
+    return axios.get(`${EMPLOYEE_API_BASE_URL}?deptno=${deptno}`).then(response => {
+      const manager = response.data.find(emp => emp.deptno === deptno);
+      return manager ? manager.ename : 'Unknown';
+    });
+  }
 }
 
 export default new EmployeeService();
