@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import EmployeeService from '../services/EmployeeService';
-import { getDepartmentName, getManagerDeptNo } from '../constants';
+import { getDepartmentName } from '../constants';
 
 const EmployeeDetail = () => {
   const { id } = useParams();
@@ -11,10 +11,7 @@ const EmployeeDetail = () => {
   useEffect(() => {
     EmployeeService.getEmployeeById(id).then((response) => {
       setEmployee(response.data);
-      const managerDeptNo = getManagerDeptNo(response.data.deptno);
-      if (managerDeptNo) {
-        EmployeeService.getManagerName(managerDeptNo).then(name => setManagerName(name));
-      }
+      EmployeeService.getManagerName(response.data.deptno).then(name => setManagerName(name));
     });
   }, [id]);
 
@@ -58,6 +55,10 @@ const EmployeeDetail = () => {
           <tr>
             <th>부서</th>
             <td>{getDepartmentName(employee.deptno)}</td>
+          </tr>
+          <tr>
+            <th>권한</th>
+            <td>{employee.role}</td>
           </tr>
         </tbody>
       </table>

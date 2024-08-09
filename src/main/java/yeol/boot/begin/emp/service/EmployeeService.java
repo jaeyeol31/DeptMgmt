@@ -45,4 +45,7 @@ public class EmployeeService {
         Employee employee = employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Employee not found"));
         employeeRepository.delete(employee);
     }
+    public Optional<Employee> getEmployeeByEmpno(Long empno) {
+        return employeeRepository.findById(empno);
+    }
 }

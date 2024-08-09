@@ -81,6 +81,17 @@ const EmployeeForm = () => {
             className="form-control"
             required
           />
+          </div>
+           <div className="form-group">
+          <label>비밀번호</label>
+          <input
+            type="text"
+            name="passWord"
+            value={employee.passWord}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
         </div>
         <div className="form-group">
           <label>직업</label>
@@ -151,6 +162,19 @@ const EmployeeForm = () => {
             onChange={handleChange}
             className="form-control"
           />
+        </div>
+        <div className="form-group">
+          <label>권한</label>
+          <select
+            name="role"
+            value={employee.role}
+            onChange={handleChange}
+            className="form-control"
+            required
+          >
+            <option value="USER">USER</option>
+            <option value="ADMIN">ADMIN</option>
+          </select>
         </div>
         <button type="submit" className="btn btn-primary">저장</button>
       </form>
