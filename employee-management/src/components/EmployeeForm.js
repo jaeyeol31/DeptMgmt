@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import EmployeeService from '../services/EmployeeService';
-import { departmentMap, getManagerDeptNo } from '../constants';
+import { departmentMap } from '../constants';
 
 const EmployeeForm = () => {
   const { id } = useParams();
@@ -25,9 +25,8 @@ const EmployeeForm = () => {
     if (id) {
       EmployeeService.getEmployeeById(id).then((response) => {
         setEmployee(response.data);
-        const managerDeptNo = getManagerDeptNo(response.data.deptno);
-        if (managerDeptNo) {
-          EmployeeService.getManagerName(managerDeptNo).then(name => setManagerName(name));
+        if (response.data.deptno) {
+          EmployeeService.getManagerName(response.data.deptno).then(name => setManagerName(name));
         }
       });
     }
@@ -35,22 +34,19 @@ const EmployeeForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEmployee({ ...employee, [name]: value });
+    setEmployee(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
   };
 
   const handleDepartmentChange = (e) => {
     const selectedDeptno = parseInt(e.target.value);
-    const mgrDeptNo = getManagerDeptNo(selectedDeptno);
     setEmployee({
       ...employee,
-      deptno: selectedDeptno,
-      mgr: mgrDeptNo
+      deptno: selectedDeptno
     });
-    if (mgrDeptNo) {
-      EmployeeService.getManagerName(mgrDeptNo).then(name => setManagerName(name));
-    } else {
-      setManagerName('');
-    }
+    EmployeeService.getManagerName(selectedDeptno).then(name => setManagerName(name));
   };
 
   const handleSubmit = (e) => {
@@ -81,8 +77,8 @@ const EmployeeForm = () => {
             className="form-control"
             required
           />
-          </div>
-           <div className="form-group">
+        </div>
+        <div className="form-group">
           <label>비밀번호</label>
           <input
             type="text"

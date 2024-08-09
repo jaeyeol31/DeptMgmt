@@ -11,7 +11,9 @@ const EmployeeDetail = () => {
   useEffect(() => {
     EmployeeService.getEmployeeById(id).then((response) => {
       setEmployee(response.data);
-      EmployeeService.getManagerName(response.data.deptno).then(name => setManagerName(name));
+      if (response.data.job !== 'MANAGER') {
+        EmployeeService.getManagerName(response.data.deptno).then(name => setManagerName(name));
+      }
     });
   }, [id]);
 
@@ -37,24 +39,24 @@ const EmployeeDetail = () => {
             <td>{employee.job}</td>
           </tr>
           <tr>
-            <th>담당 매니저</th>
-            <td>{managerName}</td>
-          </tr>
-          <tr>
-            <th>입사일</th>
-            <td>{employee.hiredate}</td>
+            <th>부서</th>
+            <td>{getDepartmentName(employee.deptno)}</td>
           </tr>
           <tr>
             <th>급여</th>
             <td>{employee.sal}</td>
           </tr>
           <tr>
-            <th>커미션</th>
-            <td>{employee.comm}</td>
+            <th>담당 매니저</th>
+            <td>{employee.job === 'MANAGER' ? '본인' : managerName}</td>
           </tr>
           <tr>
-            <th>부서</th>
-            <td>{getDepartmentName(employee.deptno)}</td>
+            <th>입사일</th>
+            <td>{employee.hiredate}</td>
+          </tr>
+          <tr>
+            <th>커미션</th>
+            <td>{employee.comm}</td>
           </tr>
           <tr>
             <th>권한</th>

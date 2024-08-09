@@ -3,15 +3,17 @@ import EmployeeService from '../services/EmployeeService';
 
 const MyPage = () => {
   const [employee, setEmployee] = useState(null);
+  const [managerName, setManagerName] = useState('');
 
   useEffect(() => {
-    // 세션 스토리지에서 사원번호를 가져옴
     const empno = sessionStorage.getItem('empno');
     
     if (empno) {
-      // 사원번호를 통해 사용자 정보를 가져옴
       EmployeeService.getEmployeeById(empno).then((response) => {
         setEmployee(response.data);
+        if (response.data.job !== 'MANAGER') {
+          EmployeeService.getManagerName(response.data.deptno).then(name => setManagerName(name));
+        }
       });
     } else {
       console.error('No employee number found in session.');
@@ -47,7 +49,10 @@ const MyPage = () => {
             <th>급여</th>
             <td>{employee.sal}</td>
           </tr>
-          {/* 필요한 정보들을 추가로 표시 */}
+          <tr>
+            <th>담당 매니저</th>
+            <td>{employee.job === 'MANAGER' ? '본인' : managerName}</td>
+          </tr>
         </tbody>
       </table>
     </div>

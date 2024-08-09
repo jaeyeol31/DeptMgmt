@@ -48,4 +48,8 @@ public class EmployeeService {
     public Optional<Employee> getEmployeeByEmpno(Long empno) {
         return employeeRepository.findById(empno);
     }
+    
+    public Optional<Employee> getManagerByDeptNo(int deptNo) {
+        return employeeRepository.findByDeptnoAndJob(deptNo, "MANAGER");
+    }
 }
