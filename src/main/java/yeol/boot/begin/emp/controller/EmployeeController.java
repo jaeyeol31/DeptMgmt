@@ -1,6 +1,7 @@
 package yeol.boot.begin.emp.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import yeol.boot.begin.emp.entity.Employee;
@@ -49,5 +51,15 @@ public class EmployeeController {
     public ResponseEntity<Void> deleteEmployee(@PathVariable("id") Long id) {
         employeeService.deleteEmployee(id);
         return ResponseEntity.noContent().build();
+    }
+    
+    @GetMapping("/manager")
+    public ResponseEntity<Employee> getManagerByDeptNo(@RequestParam("deptno") int deptNo) {
+        Optional<Employee> managerOpt = employeeService.getManagerByDeptNo(deptNo);
+        if (managerOpt.isPresent()) {
+            return ResponseEntity.ok(managerOpt.get());
+        } else {
+            return ResponseEntity.status(404).body(null); // 매니저를 찾지 못한 경우
+        }
     }
 }

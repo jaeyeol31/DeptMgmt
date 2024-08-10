@@ -139,8 +139,8 @@ const EmployeeList = () => {
 						onChange={(e) => setSortOrder(e.target.value)}
 					>
 						<option value="">입사일 정렬</option>
-						<option value="latest">최신순</option>
-						<option value="oldest">오래된순</option>
+						<option value="oldest">최신순</option>
+						<option value="latest">오래된순</option>
 					</select>
 				</div>
 			</div>

@@ -48,4 +48,7 @@ public class Employee {
 
     @Column(name = "role")
     private String role;
+    
+    @Column(name = "email")
+    private String email;
 }

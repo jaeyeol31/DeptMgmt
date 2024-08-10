@@ -8,25 +8,40 @@ const EmployeeForm = () => {
   const navigate = useNavigate();
   const [employee, setEmployee] = useState({
     ename: '',
+    email: '',
     job: '',
     mgr: null,
     hiredate: '',
     sal: '',
     comm: '',
-    deptno: ''
+    deptno: '',
+    pwd: '1234',
+    role: 'USER'
   });
+
   const [managerName, setManagerName] = useState('');
   const departments = Object.keys(departmentMap).map(deptno => ({
     deptno: parseInt(deptno),
     name: departmentMap[deptno].name
   }));
 
+  const jobOptions = ['인턴', '사원', '대리', '과장', '차장', '부장', '이사', '사장'];
+
   useEffect(() => {
     if (id) {
       EmployeeService.getEmployeeById(id).then((response) => {
         setEmployee(response.data);
         if (response.data.deptno) {
-          EmployeeService.getManagerName(response.data.deptno).then(name => setManagerName(name));
+          // 매니저 정보 가져오기
+          EmployeeService.getManagerByDept(response.data.deptno).then(manager => {
+            if (manager) {
+              setManagerName(manager.ename);
+              setEmployee(prevState => ({
+                ...prevState,
+                mgr: manager.empno
+              }));
+            }
+          });
         }
       });
     }
@@ -34,10 +49,20 @@ const EmployeeForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEmployee(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
+
+    if (name === 'job') {
+      const newRole = ['부장', '이사', '사장'].includes(value) ? 'Department Manager' : 'USER';
+      setEmployee(prevState => ({
+        ...prevState,
+        [name]: value,
+        role: newRole
+      }));
+    } else {
+      setEmployee(prevState => ({
+        ...prevState,
+        [name]: value
+      }));
+    }
   };
 
   const handleDepartmentChange = (e) => {
@@ -46,7 +71,23 @@ const EmployeeForm = () => {
       ...employee,
       deptno: selectedDeptno
     });
-    EmployeeService.getManagerName(selectedDeptno).then(name => setManagerName(name));
+
+    // 부서 선택 시 매니저 정보 가져오기
+    EmployeeService.getManagerByDept(selectedDeptno).then(manager => {
+      if (manager) {
+        setManagerName(manager.ename);
+        setEmployee(prevState => ({
+          ...prevState,
+          mgr: manager.empno
+        }));
+      } else {
+        setManagerName('');
+        setEmployee(prevState => ({
+          ...prevState,
+          mgr: null
+        }));
+      }
+    });
   };
 
   const handleSubmit = (e) => {
@@ -79,26 +120,32 @@ const EmployeeForm = () => {
           />
         </div>
         <div className="form-group">
-          <label>비밀번호</label>
+          <label>이메일</label>
           <input
-            type="text"
-            name="passWord"
-            value={employee.passWord}
+            type="email"
+            name="email"
+            value={employee.email}
             onChange={handleChange}
             className="form-control"
             required
           />
         </div>
         <div className="form-group">
-          <label>직업</label>
-          <input
-            type="text"
+          <label>직급</label>
+          <select
             name="job"
             value={employee.job}
             onChange={handleChange}
             className="form-control"
             required
-          />
+          >
+            <option value="">직급을 선택하세요</option>
+            {jobOptions.map(job => (
+              <option key={job} value={job}>
+                {job}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="form-group">
           <label>부서</label>
@@ -159,19 +206,19 @@ const EmployeeForm = () => {
             className="form-control"
           />
         </div>
-        <div className="form-group">
-          <label>권한</label>
-          <select
-            name="role"
-            value={employee.role}
-            onChange={handleChange}
-            className="form-control"
-            required
-          >
-            <option value="USER">USER</option>
-            <option value="ADMIN">ADMIN</option>
-          </select>
-        </div>
+
+        {id && (
+          <div className="form-group">
+            <label>권한</label>
+            <input
+              type="text"
+              name="role"
+              value={employee.role}
+              readOnly
+              className="form-control"
+            />
+          </div>
+        )}
         <button type="submit" className="btn btn-primary">저장</button>
       </form>
     </div>

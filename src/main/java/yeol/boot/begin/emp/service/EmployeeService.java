@@ -23,8 +23,15 @@ public class EmployeeService {
         return employeeRepository.findById(id);
     }
 
+    // 사원번호(empno)로 직원 조회
+    public Optional<Employee> getEmployeeByEmpno(Long empno) {
+        return employeeRepository.findByEmpno(empno);
+    }
+
     public Employee addEmployee(Employee employee) {
-        return employeeRepository.save(employee);
+        Employee savedEmployee = employeeRepository.save(employee);
+        updateMgrForDepartment(savedEmployee.getDeptno());
+        return savedEmployee;
     }
 
     public Employee updateEmployee(Long id, Employee employeeDetails) {
@@ -37,19 +44,35 @@ public class EmployeeService {
         employee.setSal(employeeDetails.getSal());
         employee.setComm(employeeDetails.getComm());
         employee.setDeptno(employeeDetails.getDeptno());
+        employee.setEmail(employeeDetails.getEmail());
+        employee.setPwd(employeeDetails.getPwd());
+        employee.setRole(employeeDetails.getRole());
 
-        return employeeRepository.save(employee);
+        Employee updatedEmployee = employeeRepository.save(employee);
+        updateMgrForDepartment(updatedEmployee.getDeptno());
+        return updatedEmployee;
     }
 
     public void deleteEmployee(Long id) {
         Employee employee = employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Employee not found"));
         employeeRepository.delete(employee);
+        updateMgrForDepartment(employee.getDeptno());
     }
-    public Optional<Employee> getEmployeeByEmpno(Long empno) {
-        return employeeRepository.findById(empno);
-    }
-    
+
     public Optional<Employee> getManagerByDeptNo(int deptNo) {
-        return employeeRepository.findByDeptnoAndJob(deptNo, "MANAGER");
+        return employeeRepository.findByDeptnoAndRole(deptNo, "Department Manager");
+    }
+
+    private void updateMgrForDepartment(int deptNo) {
+        Optional<Employee> managerOpt = getManagerByDeptNo(deptNo);
+        managerOpt.ifPresent(manager -> {
+            List<Employee> employees = employeeRepository.findByDeptno(deptNo);
+            for (Employee emp : employees) {
+                if (!emp.getRole().equals("Department Manager")) {
+                    emp.setMgr(manager.getEmpno().intValue());  // empno를 Integer로 변환하여 설정
+                    employeeRepository.save(emp);
+                }
+            }
+        });
     }
 }
