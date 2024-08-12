@@ -1,22 +1,16 @@
 package yeol.boot.begin.emp.controller;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpSession;
+import yeol.boot.begin.emp.dto.ChangePasswordRequest;
 import yeol.boot.begin.emp.entity.Employee;
 import yeol.boot.begin.emp.service.EmployeeService;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -32,7 +26,8 @@ public class EmployeeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") Long id) {
-        Employee employee = employeeService.getEmployeeById(id).orElseThrow(() -> new RuntimeException("Employee not found"));
+        Employee employee = employeeService.getEmployeeById(id)
+            .orElseThrow(() -> new RuntimeException("Employee not found"));
         return ResponseEntity.ok(employee);
     }
 
@@ -42,7 +37,8 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable("id") Long id, @RequestBody Employee employeeDetails) {
+    public ResponseEntity<Employee> updateEmployee(@PathVariable("id") Long id,
+                                                   @RequestBody Employee employeeDetails) {
         Employee updatedEmployee = employeeService.updateEmployee(id, employeeDetails);
         return ResponseEntity.ok(updatedEmployee);
     }
@@ -52,7 +48,7 @@ public class EmployeeController {
         employeeService.deleteEmployee(id);
         return ResponseEntity.noContent().build();
     }
-    
+
     @GetMapping("/manager")
     public ResponseEntity<Employee> getManagerByDeptNo(@RequestParam("deptno") int deptNo) {
         Optional<Employee> managerOpt = employeeService.getManagerByDeptNo(deptNo);
@@ -62,4 +58,20 @@ public class EmployeeController {
             return ResponseEntity.status(404).body(null); // 매니저를 찾지 못한 경우
         }
     }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest, HttpSession session) {
+        boolean success = employeeService.changePassword(changePasswordRequest.getEmpno(),
+                                                         changePasswordRequest.getCurrentPassword(),
+                                                         changePasswordRequest.getNewPassword());
+
+        if (success) {
+            // 세션 무효화 (로그아웃)
+            session.invalidate();
+            return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다. 로그아웃되었습니다.");
+        } else {
+            return ResponseEntity.status(401).body("현재 비밀번호가 일치하지 않습니다.");
+        }
+    }
+
 }

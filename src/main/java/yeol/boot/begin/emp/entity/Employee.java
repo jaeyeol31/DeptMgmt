@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.Temporal;
@@ -16,39 +17,47 @@ import java.sql.Date;
 @Table(name = "emp")
 @Data
 public class Employee {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "empno")
-    private Long empno;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "emp_seq")
+	@SequenceGenerator(name = "emp_seq", sequenceName = "emp_seq", allocationSize = 1)
+	@Column(name = "empno")
+	private Long empno;
 
-    @Column(name = "ename")
-    private String ename;
 
-    @Column(name = "job")
-    private String job;
+	@Column(name = "ename")
+	private String ename;
 
-    @Column(name = "mgr")
-    private Integer mgr;
+	@Column(name = "job")
+	private String job;
 
-    @Column(name = "hiredate")
-    @Temporal(TemporalType.DATE)
-    private Date hiredate;
+	@Column(name = "mgr")
+	private Integer mgr;
 
-    @Column(name = "sal")
-    private Double sal;
+	@Column(name = "hiredate")
+	@Temporal(TemporalType.DATE)
+	private Date hiredate;
 
-    @Column(name = "comm")
-    private Double comm;
+	@Column(name = "sal")
+	private Double sal;
 
-    @Column(name = "deptno")
-    private Integer deptno;
+	@Column(name = "comm")
+	private Double comm;
 
-    @Column(name = "pwd")
-    private String pwd;
+	@Column(name = "deptno")
+	private Integer deptno;
 
-    @Column(name = "role")
-    private String role;
-    
-    @Column(name = "email")
-    private String email;
+	@Column(name = "pwd")
+	private String pwd;
+
+	@Column(name = "role")
+	private String role;
+
+	@Column(name = "email")
+	private String email;
+	
+	@Column(name = "phone")
+	private String phone;
+
+	@Column(name = "address")
+	private String address;
 }

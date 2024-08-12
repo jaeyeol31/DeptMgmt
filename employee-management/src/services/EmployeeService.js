@@ -28,6 +28,9 @@ class EmployeeService {
 			.then(response => response.data);
 	}
 
+	changePassword(changePasswordRequest) {
+		return axios.post(`${EMPLOYEE_API_BASE_URL}/change-password`, changePasswordRequest);
+	}
 }
 
 export default new EmployeeService();

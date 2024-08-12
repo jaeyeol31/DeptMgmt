@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
-import EmployeeList from './components/EmployeeList';
-import EmployeeDetail from './components/EmployeeDetail';
-import EmployeeForm from './components/EmployeeForm';
-import Login from './components/Login';
-import MyPage from './components/MyPage';
+
+import EmployeeList from './emp/EmployeeList';
+import EmployeeDetail from './emp/EmployeeDetail';
+import EmployeeForm from './emp/EmployeeForm';
+import Login from './user/Login';
+import MyPage from './user/MyPage';
+import ChangePassword from './user/ChangePassword';
+import Home from './Home';  // 홈 컴포넌트 추가
 import authService from './services/authService';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import logo from './assets/images/logo.png';
+
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -21,14 +26,13 @@ const Navbar = () => {
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <Link className="navbar-brand" to="/">부서 관리 시스템</Link>
+      <Link className="navbar-brand" to="/">
+                <img src={logo} alt="WODUF Logo" style={{ height: '40px' }} />
+            </Link>
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul className="navbar-nav">
           <li className="nav-item">
-            <Link className="nav-link" to="/">홈화면</Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link" to="/">전체 목록</Link>
+            <Link className="nav-link" to="/employees">사원 목록</Link>
           </li>
           {empno ? (
             <>
@@ -56,12 +60,14 @@ const App = () => {
       <div className="container">
         <Navbar />
         <Routes>
-          <Route path="/" element={<EmployeeList />} />
+          <Route path="/" element={<Home />} />  {/* 홈화면을 기본 경로에 설정 */}
+          <Route path="/employees" element={<EmployeeList />} /> {/* 전체 목록 경로를 별도로 설정 */}
           <Route path="/view/:id" element={<EmployeeDetail />} />
           <Route path="/add" element={<EmployeeForm />} />
           <Route path="/edit/:id" element={<EmployeeForm />} />
           <Route path="/login" element={<Login />} />
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/change-password" element={<ChangePassword />} />
         </Routes>
       </div>
     </Router>

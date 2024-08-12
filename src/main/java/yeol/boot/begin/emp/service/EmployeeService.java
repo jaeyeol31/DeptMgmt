@@ -35,7 +35,8 @@ public class EmployeeService {
     }
 
     public Employee updateEmployee(Long id, Employee employeeDetails) {
-        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Employee not found"));
+        Employee employee = employeeRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Employee not found"));
 
         employee.setEname(employeeDetails.getEname());
         employee.setJob(employeeDetails.getJob());
@@ -47,6 +48,8 @@ public class EmployeeService {
         employee.setEmail(employeeDetails.getEmail());
         employee.setPwd(employeeDetails.getPwd());
         employee.setRole(employeeDetails.getRole());
+        employee.setPhone(employeeDetails.getPhone());  
+        employee.setAddress(employeeDetails.getAddress());
 
         Employee updatedEmployee = employeeRepository.save(employee);
         updateMgrForDepartment(updatedEmployee.getDeptno());
@@ -54,7 +57,8 @@ public class EmployeeService {
     }
 
     public void deleteEmployee(Long id) {
-        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Employee not found"));
+        Employee employee = employeeRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Employee not found"));
         employeeRepository.delete(employee);
         updateMgrForDepartment(employee.getDeptno());
     }
@@ -74,5 +78,22 @@ public class EmployeeService {
                 }
             }
         });
+    }
+
+    // 비밀번호 변경 로직 추가
+    public boolean changePassword(Long empno, String currentPassword, String newPassword) {
+        Optional<Employee> employeeOpt = getEmployeeByEmpno(empno);
+
+        if (employeeOpt.isPresent()) {
+            Employee employee = employeeOpt.get();
+
+            if (employee.getPwd().equals(currentPassword)) {
+                employee.setPwd(newPassword);
+                employeeRepository.save(employee);
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -32,4 +32,11 @@ const authService = {
   logout,
 };
 
+const changePassword = async (empno, currentPassword, newPassword) => {
+  return axios.post(`${API_BASE_URL}/change-password`, {
+    empno,
+    currentPassword,
+    newPassword
+  });
+};
 export default authService;

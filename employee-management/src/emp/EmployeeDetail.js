@@ -45,6 +45,14 @@ const EmployeeDetail = () => {
             <td>{employee.job}</td>
           </tr>
           <tr>
+            <th>휴대폰</th>
+            <td>{employee.phone}</td>
+          </tr>
+          <tr>
+            <th>주소</th>
+            <td>{employee.address}</td>
+          </tr>
+          <tr>
             <th>부서</th>
             <td>{getDepartmentName(employee.deptno)}</td>
           </tr>

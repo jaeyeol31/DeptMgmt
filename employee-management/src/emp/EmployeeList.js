@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import EmployeeService from '../services/EmployeeService';
 import { getDepartmentName, departmentMap } from '../constants';
+import ReactPaginate from 'react-paginate';
 
 const EmployeeList = () => {
 	const [employees, setEmployees] = useState([]);
@@ -14,6 +15,9 @@ const EmployeeList = () => {
 
 	const [startDate, setStartDate] = useState(''); // 시작일 필터
 	const [endDate, setEndDate] = useState(''); // 종료일 필터
+
+	const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 번호
+	const [employeesPerPage] = useState(10); // 페이지 당 표시할 직원 수
 
 	useEffect(() => {
 		EmployeeService.getAllEmployees().then((response) => {
@@ -59,6 +63,17 @@ const EmployeeList = () => {
 
 		setFilteredEmployees(results);
 	}, [searchTerm, selectedJob, selectedDept, sortOrder, startDate, endDate, employees]);
+
+	// 페이징 처리된 데이터를 계산하는 함수
+	const pageCount = Math.ceil(filteredEmployees.length / employeesPerPage);
+	const displayedEmployees = filteredEmployees.slice(
+		currentPage * employeesPerPage,
+		(currentPage + 1) * employeesPerPage
+	);
+
+	const handlePageClick = (data) => {
+		setCurrentPage(data.selected);
+	};
 
 	const deleteEmployee = (id) => {
 		EmployeeService.deleteEmployee(id).then(() => {
@@ -139,8 +154,8 @@ const EmployeeList = () => {
 						onChange={(e) => setSortOrder(e.target.value)}
 					>
 						<option value="">입사일 정렬</option>
-						<option value="oldest">최신순</option>
-						<option value="latest">오래된순</option>
+						<option value="latest">최신순</option>
+						<option value="oldest">오래된순</option>
 					</select>
 				</div>
 			</div>
@@ -159,7 +174,7 @@ const EmployeeList = () => {
 					</tr>
 				</thead>
 				<tbody>
-					{filteredEmployees.map(employee => (
+					{displayedEmployees.map(employee => (
 						<tr key={employee.empno}>
 							<td>{employee.empno}</td>
 							<td>{employee.ename}</td>
@@ -175,6 +190,19 @@ const EmployeeList = () => {
 					))}
 				</tbody>
 			</table>
+			<ReactPaginate
+				previousLabel={'이전'}
+				nextLabel={'다음'}
+				breakLabel={'...'}
+				breakClassName={'break-me'}
+				pageCount={pageCount}
+				marginPagesDisplayed={2}
+				pageRangeDisplayed={5}
+				onPageChange={handlePageClick}
+				containerClassName={'pagination'}
+				subContainerClassName={'pages pagination'}
+				activeClassName={'active'}
+			/>
 		</div>
 	);
 };
