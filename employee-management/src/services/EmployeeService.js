@@ -31,6 +31,10 @@ class EmployeeService {
 	changePassword(changePasswordRequest) {
 		return axios.post(`${EMPLOYEE_API_BASE_URL}/change-password`, changePasswordRequest);
 	}
+
+	getEmployeesByDept(deptno) {
+		return axios.get(`${EMPLOYEE_API_BASE_URL}/department/${deptno}`);
+	}
 }
 
 export default new EmployeeService();
