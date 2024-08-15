@@ -1,5 +1,7 @@
 package yeol.boot.begin.notice.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +20,6 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
     // 다음글을 찾기 위한 쿼리 메서드
     Notice findTopByIdGreaterThanOrderByIdAsc(Long id);
+    
+    List<Notice> findTop5ByOrderByCreatedAtDesc();
 }

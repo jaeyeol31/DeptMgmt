@@ -26,6 +26,11 @@ public class Notice {
 
     private int views;  // 조회수
 
+    @Enumerated(EnumType.STRING)
+    private Category category; // 공지사항 카테고리
+
+    private String subcategory; // 공지사항 서브카테고리
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
@@ -39,5 +44,9 @@ public class Notice {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public enum Category {
+        HR, IT_SECURITY, PROJECT_WORK, COMPANY_NEWS, URGENT
     }
 }

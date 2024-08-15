@@ -25,29 +25,39 @@ public class NoticeController {
     private final Path rootLocation = Paths.get("src/main/resources/static/uploads");
 
     @PostMapping("/upload")
-    public ResponseEntity<Notice> createNotice(@RequestParam("title") String title,
-                                               @RequestParam("content") String content,
-                                               @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail,
-                                               @RequestParam(value = "attachment", required = false) MultipartFile attachment) throws IOException {
+    public ResponseEntity<Notice> createNotice(
+            @RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @RequestParam("category") Notice.Category category,
+            @RequestParam("subcategory") String subcategory,
+            @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail,
+            @RequestParam(value = "attachment", required = false) MultipartFile attachment) throws IOException {
 
         Notice notice = new Notice();
         notice.setTitle(title);
         notice.setContent(content);
+        notice.setCategory(category); // 카테고리 설정
+        notice.setSubcategory(subcategory); // 서브카테고리 설정
 
         Notice savedNotice = noticeService.saveNotice(notice, thumbnail, attachment);
         return ResponseEntity.ok(savedNotice);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Notice> updateNotice(@PathVariable("id") Long id, 
-                                               @RequestParam("title") String title,
-                                               @RequestParam("content") String content,
-                                               @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail,
-                                               @RequestParam(value = "attachment", required = false) MultipartFile attachment) throws IOException {
+    public ResponseEntity<Notice> updateNotice(
+            @PathVariable("id") Long id,
+            @RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @RequestParam("category") Notice.Category category,
+            @RequestParam("subcategory") String subcategory,
+            @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail,
+            @RequestParam(value = "attachment", required = false) MultipartFile attachment) throws IOException {
 
         Notice noticeDetails = new Notice();
         noticeDetails.setTitle(title);
         noticeDetails.setContent(content);
+        noticeDetails.setCategory(category); // 카테고리 설정
+        noticeDetails.setSubcategory(subcategory); // 서브카테고리 설정
 
         Notice updatedNotice = noticeService.updateNotice(id, noticeDetails, thumbnail, attachment);
         return ResponseEntity.ok(updatedNotice);
@@ -96,4 +106,9 @@ public class NoticeController {
         return ResponseEntity.ok(nextNotice);
     }
 
+    @GetMapping("/recent")
+    public ResponseEntity<List<Notice>> getRecentNotices() {
+        List<Notice> recentNotices = noticeService.getRecentNotices();
+        return ResponseEntity.ok(recentNotices);
+    }
 }

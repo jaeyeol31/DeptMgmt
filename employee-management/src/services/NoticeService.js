@@ -42,7 +42,10 @@ class NoticeService {
 	getNextNotice(id) {
 		return axios.get(`${NOTICE_API_BASE_URL}/${id}/next`);
 	}
-
+	
+	getRecentNotices() {
+		return axios.get(`${NOTICE_API_BASE_URL}/recent`);
+	}
 }
 
 export default new NoticeService();

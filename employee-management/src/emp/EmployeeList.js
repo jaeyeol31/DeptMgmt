@@ -5,17 +5,61 @@ import { getDepartmentName, departmentMap } from '../constants';
 
 const EmployeeList = () => {
     const [employees, setEmployees] = useState([]);
+    const [filteredEmployees, setFilteredEmployees] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [employeesPerPage] = useState(10);
+    const [searchName, setSearchName] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [selectedDepartment, setSelectedDepartment] = useState('');
+    const [selectedJob, setSelectedJob] = useState(''); // 직업 필터링
+    const [sortOrder, setSortOrder] = useState('desc'); // 'asc' or 'desc'
 
     useEffect(() => {
         EmployeeService.getAllEmployees().then((response) => {
             setEmployees(response.data);
+            setFilteredEmployees(response.data);
         });
     }, []);
 
-    const totalPages = Math.ceil(employees.length / employeesPerPage);
-    const displayedEmployees = employees.slice(
+    useEffect(() => {
+        let results = [...employees];
+        
+        // 이름으로 필터링
+        if (searchName) {
+            results = results.filter(employee => employee.ename.toLowerCase().includes(searchName.toLowerCase()));
+        }
+
+        // 입사 기간으로 필터링
+        if (startDate && endDate) {
+            results = results.filter(employee => {
+                const hireDate = new Date(employee.hiredate);
+                return hireDate >= new Date(startDate) && hireDate <= new Date(endDate);
+            });
+        }
+
+        // 부서별 필터링
+        if (selectedDepartment) {
+            results = results.filter(employee => employee.deptno === parseInt(selectedDepartment));
+        }
+
+        // 직업별 필터링
+        if (selectedJob) {
+            results = results.filter(employee => employee.job === selectedJob);
+        }
+
+        // 입사 날짜 정렬
+        results.sort((a, b) => {
+            const dateA = new Date(a.hiredate);
+            const dateB = new Date(b.hiredate);
+            return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+        });
+
+        setFilteredEmployees(results);
+    }, [searchName, startDate, endDate, selectedDepartment, selectedJob, sortOrder, employees]);
+
+    const totalPages = Math.ceil(filteredEmployees.length / employeesPerPage);
+    const displayedEmployees = filteredEmployees.slice(
         (currentPage - 1) * employeesPerPage,
         currentPage * employeesPerPage
     );
@@ -40,6 +84,64 @@ const EmployeeList = () => {
         <div>
             <h2>직원 목록</h2>
             <Link to="/add" className="btn btn-primary mb-3">직원 추가</Link>
+
+            {/* 검색 및 필터링 폼 */}
+            <div className="mb-3">
+                <input
+                    type="text"
+                    placeholder="이름으로 검색"
+                    value={searchName}
+                    onChange={(e) => setSearchName(e.target.value)}
+                    className="form-control mb-2"
+                />
+                <div className="d-flex mb-2">
+                    <input
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        className="form-control me-2"
+                    />
+                    <input
+                        type="date"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        className="form-control"
+                    />
+                </div>
+                <div className="d-flex mb-2">
+                    <select
+                        value={selectedDepartment}
+                        onChange={(e) => setSelectedDepartment(e.target.value)}
+                        className="form-control me-2"
+                    >
+                        <option value="">부서 선택</option>
+                        {Object.entries(departmentMap).map(([deptno, department]) => (
+                            <option key={deptno} value={deptno}>
+                                {department.name}
+                            </option>
+                        ))}
+                    </select>
+                    <select
+                        value={selectedJob}
+                        onChange={(e) => setSelectedJob(e.target.value)}
+                        className="form-control"
+                    >
+                        <option value="">직업 선택</option>
+                        {[...new Set(employees.map(employee => employee.job))].map((job, index) => (
+                            <option key={index} value={job}>
+                                {job}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <button
+                    className="btn btn-secondary mb-3"
+                    onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                >
+                    {sortOrder === 'asc' ? '입사일: 오래된 순' : '입사일: 최신 순'}
+                </button>
+            </div>
+
             <table className="table table-striped mt-3">
                 <thead>
                     <tr>

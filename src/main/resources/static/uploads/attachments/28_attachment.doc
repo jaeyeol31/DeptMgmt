@@ -1,0 +1,585 @@
+<html>
+<head>
+    <base href="https://www.saramin.co.kr">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="robots" content="noindex,nofollow">
+    <title>이력서 보기</title>
+    <style type="text/css">
+        /* reset css */
+        html {
+            color: #000;
+            background: #fff
+        }
+
+        body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, blockquote, button {
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            width: 100%;
+            min-width: 1260px;
+            font-size: 13px;
+            color: #444;
+            font-family: "Malgun Gothic", dotum, gulim, sans-serif
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-size: 100%;
+            font-weight: normal;
+            margin: 0;
+            padding: 0
+        }
+
+        ol, ul, li {
+            list-style: none
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        th, td {
+            padding: 0;
+            margin: 0;
+        }
+
+        address, caption, cite, code, dfn, em, strong, th, var {
+            font-style: inherit;
+            font-weight: inherit
+        }
+
+        p {
+            margin: 0
+        }
+
+        strong {
+            font-weight: bold
+        }
+
+        caption, legend, .hidden, .blind {
+            overflow: hidden;
+            position: absolute;
+            top: 0;
+            left: -1000%;
+            z-index: -1;
+            width: 1px;
+            height: 1px;
+            font-size: 0;
+            line-height: 0
+        }
+
+        .print_wrap div, p, ul, td, input, a, span, em {
+            font-style: normal;
+            font-family: "Malgun Gothic", dotum, gulim, sans-serif;
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+<div class="print_wrap">
+    <table style="width:600px;">
+    <tr>
+        <td>
+            <table style="width:600px;">
+                <tr>
+                    <td style="width:500px">
+                        <table>
+                            <tr>
+                                <td style="color:#292e41;font-size:16px;font-weight:bold;word-break: break-all">
+                                    곽재열                                </td>
+                                <td style="padding-left:8px;">
+                                    <span style="background:#f4f6fa;color:#475067;font-size:10px;font-weight:bold;word-break: break-all">
+                                        신입                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td rowspan="3" style="width:53px;vertical-align:top;">
+						<span style="display:inline-block;width:53px;border:1px solid #eaedf4;overflow:hidden;">
+							<img width="53" height="75" alt="" src="https://www.saramin.co.kr/zf_user/persons/picture?idx=11816637|4d80c1e3a0ff4520fcf3ccb8034ead18ad83af6c39c85576d878b5e4d7525b8e" border="0" />						</span>
+                    </td>
+                </tr>
+                                    <tr>
+                        <td style="padding-top:8px;">
+                            <p style="color:#67738e;font-size:10px;line-height:24px;word-break: break-all">
+                                남, 1996 (28세)                            </p>
+                        </td>
+                    </tr>
+                                    <tr>
+                    <td style="padding-top:8px;">
+                        <table style="width:500px;color:#292e41;font-size:12px;word-break: break-all">
+                            <tr>
+                                <td style="width:166px;">woduf31@gmail.com</td>
+                                <td style="width:166px;">010-3674-2405</td>
+                                <td style="width:166px;"></td>
+                            </tr>
+                                                            <tr>
+                                    <td colspan="3" style="color:#292e41;font-size:10px;word-break: break-all">(08392) 서울 구로구 구로동</td>
+                                </tr>
+                                                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <!-- DashBoard -->
+    <tr>
+        <td style="padding-top:40px;">
+            <table style="width:600px;background:#f8fafc;">
+                <tr>
+                    <td style="padding:12px 0;vertical-align:top;">
+                        <table>
+                            <tr>
+                                                                    <td style="padding-left:12px;width:120px;vertical-align:top;">
+                                        <strong style="font-size:10px;color:#67738e;font-weight:bold;margin-bottom:4px;">학력</strong>
+                                        <p style="color:#292e41;font-size:10px;">대학교(4년) 졸업<br>청주대학교</p>
+                                    </td>
+                                                                        <td style="padding-left:12px;width:120px;vertical-align:top;border-left:1px solid #eaedf4;">
+                                        <strong style="font-size:10px;color:#67738e;font-weight:bold;margin-bottom:4px;">전공</strong>
+                                        <p style="color:#292e41;font-size:10px;">회계</p>
+                                    </td>
+                                                                        <td style="padding-left:12px;width:120px;vertical-align:top;border-left:1px solid #eaedf4;">
+                                        <strong style="font-size:10px;color:#67738e;font-weight:bold;margin-bottom:4px;">업무경험</strong>
+                                        <p style="color:#292e41;font-size:10px;">총  3년 5개월 (퇴사)<br>㈜한화비엠씨</p>
+                                    </td>
+                                                                        <td style="padding-left:12px;width:120px;vertical-align:top;border-left:1px solid #eaedf4;">
+                                        <strong style="font-size:10px;color:#67738e;font-weight:bold;margin-bottom:4px;">희망연봉</strong>
+                                        <p style="color:#292e41;font-size:10px;">회사내규에 따름</p>
+                                    </td>
+                                                                        <td style="padding-left:12px;width:120px;vertical-align:top;border-left:1px solid #eaedf4;">
+                                        <strong style="font-size:10px;color:#67738e;font-weight:bold;margin-bottom:4px;">포트폴리오</strong>
+                                        <p style="color:#292e41;font-size:10px;"><a href="https://github.com/jaeyeol31" class="portfolio ico_pdf05" target="_blank"><span>https://github.com/jaeyeol31</span></a><a href="https://pds3.saramin.co.kr/webfile/download_memberfile_security.php?appmode=slide_webview&amp;file=person%2Fresume_filebox%2F202408%2F11%2Fsi20tw_3zo8-1mrubdc_resume_filebox.pdf&amp;name2=%EA%B3%BD%EC%9E%AC%EC%97%B4_%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4.pdf" class="portfolio ico_pdf01  sri_attch_file" target="_blank"><span>곽재열 포트폴리오</span><span>.pdf</span></a></p>
+                                    </td>
+                                                                </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>    <!-- skill -->
+    <table style="width:600px;">
+                    <tr>
+                <td style="padding-top:40px;">
+                    <h3 style="font-size:16px;font-weight:bold;color:#292e41">나의 스킬</h3>
+                    <p style="line-height:43px;word-break: break-all">
+                                                    <span style="border:1px solid #d7dce5;padding:7px 11px;color:#475067;font-size:13px;word-break: break-all">Java</span>
+                                                        <span style="border:1px solid #d7dce5;padding:7px 11px;color:#475067;font-size:13px;word-break: break-all">JavaScript</span>
+                                                        <span style="border:1px solid #d7dce5;padding:7px 11px;color:#475067;font-size:13px;word-break: break-all">Spring Data JPA</span>
+                                                        <span style="border:1px solid #d7dce5;padding:7px 11px;color:#475067;font-size:13px;word-break: break-all">Gradle</span>
+                                                        <span style="border:1px solid #d7dce5;padding:7px 11px;color:#475067;font-size:13px;word-break: break-all">Oracle</span>
+                                                        <span style="border:1px solid #d7dce5;padding:7px 11px;color:#475067;font-size:13px;word-break: break-all">SQL</span>
+                                                        <span style="border:1px solid #d7dce5;padding:7px 11px;color:#475067;font-size:13px;word-break: break-all">MyBatis</span>
+                                                        <span style="border:1px solid #d7dce5;padding:7px 11px;color:#475067;font-size:13px;word-break: break-all">Spring Boot</span>
+                                                        <span style="border:1px solid #d7dce5;padding:7px 11px;color:#475067;font-size:13px;word-break: break-all">Spring Tools 4</span>
+                                                        <span style="border:1px solid #d7dce5;padding:7px 11px;color:#475067;font-size:13px;word-break: break-all">IntelliJ IDEA</span>
+                                                        <span style="border:1px solid #d7dce5;padding:7px 11px;color:#475067;font-size:13px;word-break: break-all">React</span>
+                                                        <span style="border:1px solid #d7dce5;padding:7px 11px;color:#475067;font-size:13px;word-break: break-all">HTML5</span>
+                                                        <span style="border:1px solid #d7dce5;padding:7px 11px;color:#475067;font-size:13px;word-break: break-all">css</span>
+                                                        <span style="border:1px solid #d7dce5;padding:7px 11px;color:#475067;font-size:13px;word-break: break-all">Spring Framework</span>
+                                                        <span style="border:1px solid #d7dce5;padding:7px 11px;color:#475067;font-size:13px;word-break: break-all">Spring MVC</span>
+                                                        <span style="border:1px solid #d7dce5;padding:7px 11px;color:#475067;font-size:13px;word-break: break-all">Spring Security</span>
+                                                </p>
+                </td>
+            </tr>
+                </table>
+        <table style="width:600px;">
+        <tr>
+            <td style="padding-top:60px;"></td>
+        </tr>
+        <tr>
+    <td>
+        <table style="border-top:1px solid #8491a7;">
+            <tr>
+                <td style="width:110px;vertical-align:top;">
+                    <h2 style="font-size:12px;margin-top:28px;">학력</h2>
+                    <p style="margin-top:4px;font-size:10px;color:#67738e;word-break:break-all">
+                        대학교<em>4년</em>졸업                    </p>
+                </td>
+                <td style="width:490px;vertical-align:top;padding-bottom:32px;">
+                    <table>
+                                                    <tr>
+                                <td style="padding:28px 0;">
+                                    <table style="width:490px;">
+                                        <tr>
+                                            <td style="text-align:left;word-break:break-all;word-wrap:break-word">
+                                                <h3 style="font-size:12px;font-weight:bold;color:#292e41;word-break:break-all">
+                                                    청주고등학교                                                </h3>
+                                            </td>
+                                            <td style="text-align:right;font-size:10px;color:#292e41;word-break: break-all;word-wrap:break-word">
+                                                2012.03 ~ 2015.02 (졸업)                                            </td>
+                                        </tr>
+                                                                                    <tr>
+                                                <td colspan="2" style="word-break: break-all;word-wrap:break-word">
+                                                                                                            <p style="margin:4px 0 12px 0;font-size:10px;color:#292e41;word-break: break-all">문과계열</p>
+                                                                                                        </td>
+                                            </tr>
+                                                                                </table>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td style="padding:28px 0;border-top:1px solid #d7dce5;">
+                                    <table style="width:490px;">
+                                        <tr>
+                                            <td style="text-align:left;word-break:break-all;word-wrap:break-word">
+                                                <h3 style="font-size:12px;font-weight:bold;color:#292e41;word-break:break-all">
+                                                    청주대학교(4년제)                                                </h3>
+                                            </td>
+                                            <td style="text-align:right;font-size:10px;color:#292e41;word-break: break-all;word-wrap:break-word">
+                                                2015.03 ~ 2022.02 (졸업)                                            </td>
+                                        </tr>
+                                                                                    <tr>
+                                                <td colspan="2" style="word-break: break-all;word-wrap:break-word">
+                                                                                                            <p style="margin:4px 0 12px 0;font-size:10px;color:#292e41;word-break: break-all">회계</p>
+                                                                                                                <table>
+                                                                                                                            <tr>
+                                                                    <td style="width:100px;font-size:10px;vertical-align:top;">학점</td>
+                                                                    <td style="width:10px;font-size:10px;color:#d7dce5;vertical-align:top;">|</td>
+                                                                    <td style="width:350px;font-size:10px;vertical-align:top;word-break: break-all;word-wrap:break-word">3.28/4.5</td>
+                                                                </tr>
+                                                                                                                                <tr>
+                                                                    <td style="width:100px;font-size:10px;vertical-align:top;">지역</td>
+                                                                    <td style="width:10px;font-size:10px;color:#d7dce5;vertical-align:top;">|</td>
+                                                                    <td style="width:350px;font-size:10px;vertical-align:top;word-break: break-all;word-wrap:break-word">충북</td>
+                                                                </tr>
+                                                                                                                        </table>
+                                                                                                        </td>
+                                            </tr>
+                                                                                </table>
+                                </td>
+                            </tr>
+                                                </table>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>    <tr>
+        <td>
+            <table style="border-top:1px solid #8491a7;">
+                <tr>
+                    <td style="width:110px;vertical-align:top;">
+                        <h2 style="font-size:12px;margin-top:28px;word-break:break-all">경력</h2>
+                        <p style="margin-top:4px;font-size:10px;color:#67738e;word-break: break-all">
+                            신입                        </p>
+                                            </td>
+                    <td style="width:490px;vertical-align:top;padding-bottom:32px;">
+                        <table>
+                                                            <tr>
+                                    <td style="padding:28px 0;">
+                                        <table style="width:490px;">
+                                            <tr>
+                                                <td style="text-align:left;">
+                                                    <h3 style="font-size:12px;font-weight:bold;color:#292e41;word-break:break-all">㈜한화비엠씨</h3>
+                                                </td>
+                                                <td style="text-align:right;font-size:10px;color:#292e41;word-break: break-all">
+                                                    2021.08 ~ 2023.11 · 2년 4개월                                                </td>
+                                            </tr>
+                                                                                            <tr>
+                                                    <td colspan="2">
+                                                                                                                    <p style="margin:4px 0 12px 0;font-size:10px;color:#292e41;word-break:break-all">영업 · 주임</p>
+                                                                                                                        <p style="margin:4px 0 12px 0;font-size:10px;color:#292e41;word-break:break-all">납품 관리<br />
+고객사 주문 접수 및 일정에 맞춘 납품 계획 수립<br />
+제품 포장 및 출하 관리<br />
+납품 관련 문서 작성 및 처리<br />
+납품 후 고객 피드백 수집 및 개선 활동<br />
+<br />
+영업 활동<br />
+신규 고객사 발굴 및 기존 고객사 유지 관리<br />
+고객사 방문 및 제품 설명, 상담<br />
+영업 목표 설정 및 달성 전략 수립<br />
+판매 실적 분석 및 보고</p>
+                                                                                                                </td>
+                                                </tr>
+                                                                                        </table>
+                                    </td>
+                                </tr>
+                                                                <tr>
+                                    <td style="padding:28px 0;border-top:1px solid #d7dce5;">
+                                        <table style="width:490px;">
+                                            <tr>
+                                                <td style="text-align:left;">
+                                                    <h3 style="font-size:12px;font-weight:bold;color:#292e41;word-break:break-all">제일패션리테일㈜</h3>
+                                                </td>
+                                                <td style="text-align:right;font-size:10px;color:#292e41;word-break: break-all">
+                                                    2020.01 ~ 2021.01 · 1년 1개월                                                </td>
+                                            </tr>
+                                                                                    </table>
+                                    </td>
+                                </tr>
+                                                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+<tr>
+    <td>
+        <table style="border-top:1px solid #8491a7;">
+            <tr>
+                <td style="width:110px;vertical-align:top;">
+                    <h2 style="font-size:12px;margin-top:28px;word-break: break-all">경험/활동/교육</h2>
+                </td>
+                <td style="width:490px;vertical-align:top;padding-bottom:32px;">
+                    <table>
+                                                    <tr>
+                                <td style="padding:28px 0;">
+                                    <table style="width:460px;">
+                                        <tr>
+                                            <td style="text-align:left;">
+                                                <h3 style="font-size:12px;font-weight:bold;color:#292e41;word-break:break-all">
+                                                    더조은컴퓨터 구로캠퍼스                                                </h3>
+                                            </td>
+                                            <td style="text-align:right;font-size:10px;color:#292e41;word-break:break-all">
+                                                2024.01 ~ 2024.07                                            </td>
+                                        </tr>
+                                                                                    <tr>
+                                                <td colspan="2">
+                                                    <p style="margin:4px 0 12px 0;font-size:10px;color:#292e41;word-break: break-all">AWS클라우드 기반 자바&amp;스프링&amp;리액트 풀스택<br />
+<br />
+프론트엔드[HTML, CSS, Javascript, React]<br />
+백엔드[ Java, Mybatis, Oracle, JPA, 스프링(Spring Framework, SpringBoot)]<br />
+AWS클라우드 활용 웹 개발</p>
+                                                </td>
+                                            </tr>
+                                                                                </table>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td style="padding:28px 0;border-top:1px solid #d7dce5;">
+                                    <table style="width:460px;">
+                                        <tr>
+                                            <td style="text-align:left;">
+                                                <h3 style="font-size:12px;font-weight:bold;color:#292e41;word-break:break-all">
+                                                    팀스파르타 주식회사                                                </h3>
+                                            </td>
+                                            <td style="text-align:right;font-size:10px;color:#292e41;word-break:break-all">
+                                                2023.07 ~ 2024.08                                            </td>
+                                        </tr>
+                                                                                    <tr>
+                                                <td colspan="2">
+                                                    <p style="margin:4px 0 12px 0;font-size:10px;color:#292e41;word-break: break-all">비개발자를 위한 웹개발 기초</p>
+                                                </td>
+                                            </tr>
+                                                                                </table>
+                                </td>
+                            </tr>
+                                                </table>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr><tr>
+    <td>
+        <table style="border-top:1px solid #8491a7;">
+            <tr>
+                <td style="width:110px;vertical-align:top;">
+                    <h2 style="font-size:12px;margin-top:28px;word-break:normal">
+                        포트폴리오 및<br>기타문서                    </h2>
+                </td>
+                <td style="width:490px;vertical-align:top;padding-bottom:32px;">
+                    <table>
+                                                    <tr>
+                                <td style="padding:28px 0;">
+                                    <table style="width:490px;">
+                                        <tr>
+                                            <td style="text-align:left;">
+                                                <h3 style="font-size:12px;font-weight:bold;color:#292e41;word-break: break-all">
+                                                    포트폴리오                                                </h3>
+                                            </td>
+                                        </tr>
+                                                                                    <tr>
+                                                <td>
+                                                                                                            <p style="margin:4px 0 12px 0;font-size:10px;color:#292e41;word-break: break-all">
+                                                            <a href="https://github.com/jaeyeol31" target="_blank" alt="https://github.com/jaeyeol31" title="https://github.com/jaeyeol31" class="file_link"><span>https://github.com/jaeyeol31</span></a>                                                        </p>
+                                                                                                        </td>
+                                            </tr>
+                                                                                </table>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td style="padding:28px 0;border-top:1px solid #d7dce5;">
+                                    <table style="width:490px;">
+                                        <tr>
+                                            <td style="text-align:left;">
+                                                <h3 style="font-size:12px;font-weight:bold;color:#292e41;word-break: break-all">
+                                                    포트폴리오                                                </h3>
+                                            </td>
+                                        </tr>
+                                                                                    <tr>
+                                                <td>
+                                                                                                            <p style="margin:4px 0 12px 0;font-size:10px;color:#292e41;word-break: break-all">
+                                                            <a  href="https://pds3.saramin.co.kr/webfile/download_memberfile_security.php?appmode=slide_webview&amp;file=person%2Fresume_filebox%2F202408%2F11%2Fsi20tw_3zo8-1mrubdc_resume_filebox.pdf&amp;name2=%EA%B3%BD%EC%9E%AC%EC%97%B4_%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4.pdf" title="곽재열 포트폴리오.pdf" style="" class="file_link" ><span>곽재열 포트폴리오.pdf</span></a>                                                        </p>
+                                                                                                        </td>
+                                            </tr>
+                                                                                </table>
+                                </td>
+                            </tr>
+                                                </table>
+                    <p class="guide_txt">* 첨부파일 다운로드는 사람인 기업회원만 가능하며 개인간 공개는 제한됩니다.</p>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+<tr>
+    <td>
+        <table style="border-top:1px solid #8491a7;">
+            <tr>
+                <td style="width:110px;vertical-align:top;">
+                    <h2 style="font-size:12px;margin-top:28px;word-break:break-all">자기소개서</h2>
+                </td>
+                <td style="width:490px;vertical-align:top;padding-bottom:32px;">
+                    <table>
+
+                                                    <tr>
+                                <td style="padding:28px 0;">
+                                    <table style="width:490px;overflow-wrap:break-word;word-break:break-all;word-wrap:break-word;white-space:normal">
+                                        <tr>
+                                            <td style="text-align:left;">
+                                                <h3 style="font-size:12px;font-weight:bold;color:#292e41;word-break:break-all">
+                                                    성장과정                                                </h3>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p style="margin:4px 0 12px 0;font-size:10px;color:#292e41;overflow-wrap:break-word;word-break:break-all;word-wrap:break-word;white-space:normal">저는 초등학교부터 고등학교 2학년까지 야구 선수로 활동했습니다. 고등학교 1학년 때부터 전국 대회에 나갈 정도로 실력을 인정받았지만, 더 잘하고 싶은 욕심에 무리하게 연습하다가 부상을 당하게 되었습니다. 부상으로 인해 수술이 필요했고, 재활 후에도 재발 가능성이 높다는 진단을 받았습니다. 이에 깊은 고민 끝에 고등학교 2학년 4월에 야구를 그만두고, 일반 학생으로 전환하게 되었습니다.<br />
+운동선수 시절에는 학교 수업을 아예 듣지 못했고, 고등학교 때는 학교에서 한 시간 넘게 걸리는 거리에서 숙소 생활을 하며 운동에 전념했습니다. 시험 볼 때는 시험지도 없이 OMR 카드만 받아 시험을 볼 정도로 공부를 할 수 없는 여건이었습니다. 그러나 야구를 그만두고 일반 학생으로 돌아갔을 때, 저는 낮은 성적에서부터 시작하여 꾸준한 노력과 자기 관리로 성적을 향상시켰습니다. 고등학교 3학년 1학기 중간고사에서는 수학 내신 3등급을 받았고, 6월 모의고사에서는 1등급을 달성하는 성과를 거두었습니다.<br />
+대학교에 진학한 후, 2학년 때는 과 학생회에서 활동하며 다양한 학내 활동과 행사 기획, 운영을 경험했습니다. 이를 통해 팀워크와 리더십을 배양하고, 학생들의 요구사항을 반영하여 문제를 해결하는 능력을 키웠습니다. 3학년 때는 총학생회 회계부서 국장으로서 예산 편성과 재정 관리를 책임지며, 제한된 자원을 효율적으로 배분하는 능력을 키웠습니다. 이를 통해 신중한 의사결정과 팀 협력의 중요성을 배우고, 실질적인 리더십을 발휘할 수 있었습니다.<br />
+</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td style="padding:28px 0;border-top:1px solid #d7dce5;word-break:break-all">
+                                    <table style="width:490px;overflow-wrap:break-word;word-break:break-all;word-wrap:break-word;white-space:normal">
+                                        <tr>
+                                            <td style="text-align:left;">
+                                                <h3 style="font-size:12px;font-weight:bold;color:#292e41;word-break:break-all">
+                                                    성격의 장단점                                                </h3>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p style="margin:4px 0 12px 0;font-size:10px;color:#292e41;overflow-wrap:break-word;word-break:break-all;word-wrap:break-word;white-space:normal">1. 적응력<br />
+<br />
+1-1 다양한 환경에서 빠르게 적응 : 야구 선수 생활을 그만두고 일반 학생으로 전환하면서 학업에 빠르게 적응해 성적을 향상시킨 경험이 있습니다. 이러한 적응력은 최신 기술 동향을 주시하고, 현업의 요구사항에 맞춰 최적의 솔루션을 제공하는 데 중요한 역할을 합니다. 새로운 프로그래밍 언어나 프레임워크를 신속하게 학습하여 프로젝트에 적용함으로써 개발 효율성을 높이고, 최신 기술 트렌드를 반영한 솔루션을 제공할 수 있습니다.<br />
+<br />
+1-2 새로운 역할과 책임을 잘 소화 : 대학교 학생회 활동, 총학생회 국장 활동, 그리고 회사에서의 다양한 업무를 성공적으로 수행하며 새로운 환경과 역할에 빠르게 적응했습니다. 이는 개발자로서 기술적인 변화에 대한 두려움보다는 기회로 삼아, 기존 시스템의 단점을 개선하고 효율적인 개발 환경을 구축하는 데 집중할 수 있음을 보여줍니다.<br />
+<br />
+2. 커뮤니케이션 능력<br />
+<br />
+2-1 효과적인 대인관계: 영업 업무를 통해 거래처와 원활하게 소통하며 새로운 거래처를 성공적으로 확보했습니다. 개발자로서도 팀원들과의 원활한 소통을 통해 코드 리뷰, 협업, 그리고 최적의 솔루션을 도출하는 데 기여할 수 있습니다.<br />
+<br />
+2-2 협상력: 학생회의 권익 보호 활동과 회사에서의 업무를 통해 다양한 상황에서 협상 능력을 발휘했습니다 이는 프로젝트의 요구사항을 이해하고, 고객과 팀원들 간의 의견을 조율하는 데 유용합니다.<br />
+<br />
+성격의 단점 및 보완 노력<br />
+<br />
+- 과도한 욕심 : 야구 선수 시절 더 잘하고 싶은 욕심에 무리하게 연습하다가 부상을 당한 경험이 있습니다. 개발자로서도 과도한 목표 설정으로 인해 번아웃이나 코드 품질 저하로 이어질 수 있습니다.<br />
+<br />
+-  스트레스와 부담 : 자신에게 높은 기대를 걸고 목표를 달성하려는 과정에서 과도한 스트레스와 부담을 느낄 수 있습니다. 개발 프로젝트의 마감 기한과 품질 요구사항을 충족하려는 압박으로 작용할 수 있습니다.<br />
+<br />
+- 보완 노력 : 이러한 단점을 보완하기 위해 계획적인 스케줄링을 고려하여 목표 달성 과정을 체계적으로 관리하려고 노력하고 있습니다. 꾸준한 코드 리팩토링과 테스트를 통해 안정성을 확보하면서도, 새로운 기술 도입을 통해 성능 개선과 사용자 경험을 향상시킬 수 있습니다. 이를 통해 무리한 노력을 줄이고, 스트레스와 부담을 효과적으로 관리하고자 합니다.</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td style="padding:28px 0;border-top:1px solid #d7dce5;word-break:break-all">
+                                    <table style="width:490px;overflow-wrap:break-word;word-break:break-all;word-wrap:break-word;white-space:normal">
+                                        <tr>
+                                            <td style="text-align:left;">
+                                                <h3 style="font-size:12px;font-weight:bold;color:#292e41;word-break:break-all">
+                                                    직무 전환을 위한 노력 활동 및 동기                                                </h3>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p style="margin:4px 0 12px 0;font-size:10px;color:#292e41;overflow-wrap:break-word;word-break:break-all;word-wrap:break-word;white-space:normal">- 노력 활동<br />
+<br />
+ 저는 개발자로서의 새로운 경로를 개척하기 위해 체계적인 교육을 받으며 필요한 기술 역량을 쌓았습니다. 비개발자를 위한 웹 개발 종합 과정을 통해 기초적인 웹 개발을 학습하였고, 이후 더조은 컴퓨터 구로캠퍼스에서 K-Digital Training 국비 프로그램을 통해 프론트엔드(HTML, CSS, JavaScript, React)와 백엔드(Java, MyBatis, Oracle, JPA, Spring Framework, Spring Boot) 기술을 심도 있게 익혔습니다. 또한, AWS 클라우드를 활용한 웹 개발을 통해 클라우드 환경에서의 개발 역량도 강화하였습니다. 청주에서 거주 중이었지만, 개발 인프라가 잘 갖춰진 서울에서 교육을 이수하며 현장에 맞는 실무 역량을 다졌습니다.<br />
+<br />
+- 직무 전환의 동기<br />
+<br />
+ 다양한 고객의 요구사항을 충족시키고 문제를 해결하는 과정에서, 기술적 한계에 대한 아쉬움과 더 창의적이고 효율적인 솔루션을 만들고자 하는 열망이 커졌습니다. 웹 개발의 기초를 배우고 다양한 기술을 접하면서, 이를 통해 실제로 작동하는 제품을 만들어 내는 과정에서 큰 흥미와 보람을 느꼈습니다. 특히, 개발자는 문제를 창의적으로 해결하고 더 나은 사용자 경험을 제공하기 위해 끊임없이 학습하고 성장해야 한다는 점에서 큰 매력을 느꼈습니다. 이는 제가 이전 업무에서 겪었던 반복적인 문제 해결과는 다른, 더 큰 도전이자 기회로 다가왔습니다.<br />
+<br />
+따라서, 기술적 역량을 키우고 이를 통해 더 넓은 범위의 문제를 해결하며, 혁신적인 가치를 창출하는 개발자로서의 경력을 쌓고자 결심하게 되었습니다. 이러한 노력을 통해 개발자로서의 목표를 달성하고, 지속적으로 성장하며 새로운 가치를 제공하기 위해 끊임없이 노력하고 있습니다.<br />
+<br />
+</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td style="padding:28px 0;border-top:1px solid #d7dce5;word-break:break-all">
+                                    <table style="width:490px;overflow-wrap:break-word;word-break:break-all;word-wrap:break-word;white-space:normal">
+                                        <tr>
+                                            <td style="text-align:left;">
+                                                <h3 style="font-size:12px;font-weight:bold;color:#292e41;word-break:break-all">
+                                                    입사 후 포부                                                </h3>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p style="margin:4px 0 12px 0;font-size:10px;color:#292e41;overflow-wrap:break-word;word-break:break-all;word-wrap:break-word;white-space:normal">지속적인 학습과 성장: 빠르게 변화하는 기술 환경에서 지속적으로 학습하고 성장하는 것을 최우선 목표로 삼겠습니다. 새로운 프로그래밍 언어, 프레임워크, 도구 등을 적극적으로 학습하여 회사의 기술 스택을 강화하고, 최신 기술 트렌드를 반영한 솔루션을 제공하겠습니다.<br />
+<br />
+팀워크와 협업: 다양한 프로젝트를 통해 팀원들과의 원활한 소통과 협업을 강화하겠습니다. 코드 리뷰와 협업을 통해 팀의 개발 효율성을 높이고, 상호 피드백을 주고받으며 함께 성장하는 문화를 만들겠습니다. 팀 내에서의 역할을 명확히 하고, 프로젝트 목표를 효과적으로 달성할 수 있도록 노력하겠습니다.<br />
+<br />
+문제 해결과 혁신: 고객의 요구를 깊이 이해하고, 이를 해결할 수 있는 혁신적인 솔루션을 제시하겠습니다. 기존 시스템의 단점을 분석하고 개선하여 더 나은 사용자 경험을 제공하는 데 기여하겠습니다. 또한, 새로운 프로젝트를 주도적으로 탐구하고, 창의적인 문제 해결 능력을 발휘하여 회사의 성과를 높이겠습니다.<br />
+<br />
+효율적인 개발 환경 구축: 애자일(Agile) 방법론을 활용하여 프로젝트를 관리하고, 변화하는 요구사항에 유연하게 대응하면서도 일정 내에 높은 품질의 결과물을 제공하겠습니다. 효율적인 개발 프로세스를 구축하고, 코드 품질을 유지하며, 지속적인 통합 및 배포(CI/CD) 시스템을 통해 안정적인 서비스를 제공할 수 있도록 하겠습니다.<br />
+<br />
+장기적 성장과 기여: 단기적인 목표를 넘어, 회사의 장기적인 비전과 목표에 기여하겠습니다. 회사의 성장과 발전에 이바지하며, 나아가 산업 전반에 긍정적인 영향을 미칠 수 있는 프로젝트에 참여하고 싶습니다. 개인적인 성장과 함께 회사의 성과를 극대화하는 데 최선을 다하겠습니다.<br />
+<br />
+이러한 포부를 바탕으로, 저는 개발자로서 회사와 함께 성장하며, 회사의 비전과 목표를 달성하는 데 중요한 역할을 하고자 합니다. 입사 후에도 끊임없이 노력하고 발전하여, 회사의 가치를 높이는 데 기여할 수 있도록 하겠습니다.</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td style="padding:28px 0;border-top:1px solid #d7dce5;word-break:break-all">
+                                    <table style="width:490px;overflow-wrap:break-word;word-break:break-all;word-wrap:break-word;white-space:normal">
+                                        <tr>
+                                            <td style="text-align:left;">
+                                                <h3 style="font-size:12px;font-weight:bold;color:#292e41;word-break:break-all">
+                                                    직무: 체인 베어링 회사 영업 및 납품 관리                                                </h3>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p style="margin:4px 0 12px 0;font-size:10px;color:#292e41;overflow-wrap:break-word;word-break:break-all;word-wrap:break-word;white-space:normal">1.  거래처 관리 및 문제 해결 능력 강화<br />
+<br />
+1-1 안정적인 거래처 관리: 충북 지역 내 23개의 기존 거래처를 지속적으로 관리하며 안정적인 영업 기반을 유지했습니다. 이 과정에서 고객의 다양한 요구 사항과 예기치 않은 문제에 대응하며, 문제 해결 능력을 크게 향상시켰습니다.<br />
+<br />
+1-2 신규 거래처 확보 및 책임감 강화: 천안 지역에서는 4곳의 신규 거래처를 확보하며 지역 내 관리자로서 책임감을 더욱 강화했습니다. 고객과의 의사소통 능력을 향상시키고, 주도적으로 문제를 해결하며 고객과의 신뢰 관계를 구축했습니다. 이러한 경험을 통해 문제 해결 능력과 책임감이 크게 향상되었습니다.<br />
+<br />
+1-3 경력 발전의 밑거름: 이 경험은 저의 경력 발전에 중요한 밑거름이 되었으며, 앞으로도 고객과의 긴밀한 소통을 통해 성과를 창출할 것입니다.<br />
+<br />
+2. 유지보수 중심의 영업 전략<br />
+<br />
+2-1 지속적 운영 지원: 생산 라인(베어링, 체인) 설치와 더불어 유지보수에 중점을 두어 고객사의 지속적 운영을 지원했습니다.<br />
+<br />
+2-2 전문성 및 신뢰도 향상: 체인과 베어링 납품 외에도 고객사의 생산 라인 유지보수에 필요한 산업용 도구, 전기 자재, 배관 부품 등을 함께 납품하며, 이와 같은 전문성을 갖춤으로써 고객사의 신뢰도를 높였습니다.<br />
+<br />
+2-3 장기적 거래 관계 구축: 고객사의 신뢰를 바탕으로 장기적인 거래 관계를 구축하며 유지보수 분야에서 신뢰받는 파트너로서의 입지를 강화했습니다. 이를 통해 지속적인 매출원을 확보하고 고객 만족도를 높였습니다.</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                                                </table>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>    </table>
+</div>
+</body>
+</html>
