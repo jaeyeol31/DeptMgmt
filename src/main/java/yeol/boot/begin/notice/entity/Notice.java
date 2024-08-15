@@ -13,6 +13,8 @@ public class Notice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long noticeNumber;  // 공지사항 번호
+
     private String title;
 
     @Lob
@@ -22,6 +24,8 @@ public class Notice {
 
     private String attachment; // 파일 경로
 
+    private int views;  // 조회수
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
@@ -29,6 +33,7 @@ public class Notice {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        views = 0;  // 조회수 초기화
     }
 
     @PreUpdate

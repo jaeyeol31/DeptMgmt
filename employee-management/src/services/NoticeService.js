@@ -10,7 +10,7 @@ class NoticeService {
 			}
 		});
 	}
-	
+
 	getAllNotices() {
 		return axios.get(NOTICE_API_BASE_URL);
 	}
@@ -30,9 +30,19 @@ class NoticeService {
 	deleteNotice(id) {
 		return axios.delete(`${NOTICE_API_BASE_URL}/${id}`);
 	}
-	getNoticeById(id) {
-		return axios.get(`${NOTICE_API_BASE_URL}/${id}`);
+
+	getNoticesWithPagination(page, size) {
+		return axios.get(`${NOTICE_API_BASE_URL}/paged?page=${page}&size=${size}`);
 	}
+
+	getPreviousNotice(id) {
+		return axios.get(`${NOTICE_API_BASE_URL}/${id}/previous`);
+	}
+
+	getNextNotice(id) {
+		return axios.get(`${NOTICE_API_BASE_URL}/${id}/next`);
+	}
+
 }
 
 export default new NoticeService();

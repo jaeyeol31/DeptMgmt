@@ -11,6 +11,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class NoticeService {
@@ -18,12 +21,13 @@ public class NoticeService {
     @Autowired
     private NoticeRepository noticeRepository;
 
-    // 파일이 저장될 경로를 static 디렉터리 아래로 설정
     private final Path thumbnailLocation = Paths.get("src/main/resources/static/uploads/thumbnails");
     private final Path attachmentLocation = Paths.get("src/main/resources/static/uploads/attachments");
     private final Path contentImageLocation = Paths.get("src/main/resources/static/uploads/content-images");
 
     public Notice saveNotice(Notice notice, MultipartFile thumbnail, MultipartFile attachment) throws IOException {
+        notice.setNoticeNumber(generateNoticeNumber()); // 공지사항 번호 생성
+
         Notice savedNotice = noticeRepository.save(notice);
 
         if (thumbnail != null && !thumbnail.isEmpty()) {
@@ -37,6 +41,11 @@ public class NoticeService {
         }
 
         return noticeRepository.save(savedNotice);
+    }
+
+    private Long generateNoticeNumber() {
+        Long maxNoticeNumber = noticeRepository.findMaxNoticeNumber();
+        return maxNoticeNumber != null ? maxNoticeNumber + 1 : 1L;
     }
 
     private String saveFile(MultipartFile file, Path location, String fileName) throws IOException {
@@ -72,8 +81,14 @@ public class NoticeService {
     }
 
     public Notice getNoticeById(Long id) {
-        return noticeRepository.findById(id)
+        Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Notice not found"));
+
+        // 조회수 증가
+        notice.setViews(notice.getViews() + 1);
+        noticeRepository.save(notice);
+
+        return notice;
     }
 
     public List<Notice> getAllNotices() {
@@ -82,5 +97,18 @@ public class NoticeService {
 
     public void deleteNotice(Long id) {
         noticeRepository.deleteById(id);
+    }
+    
+    public Page<Notice> getNoticesWithPagination(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return noticeRepository.findAllByOrderByCreatedAtDesc(pageable);
+    }
+
+    public Notice getPreviousNotice(Long id) {
+        return noticeRepository.findTopByIdLessThanOrderByIdDesc(id);
+    }
+
+    public Notice getNextNotice(Long id) {
+        return noticeRepository.findTopByIdGreaterThanOrderByIdAsc(id);
     }
 }
