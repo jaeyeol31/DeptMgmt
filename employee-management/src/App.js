@@ -1,16 +1,18 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
-
 import EmployeeList from './emp/EmployeeList';
 import EmployeeDetail from './emp/EmployeeDetail';
 import EmployeeForm from './emp/EmployeeForm';
 import DeptList from './dept/DeptList';
 import DeptForm from './dept/DeptForm';
-import DeptDetail from './dept/DeptDetail';  // DeptDetail 추가
+import DeptDetail from './dept/DeptDetail';
+import NoticeList from './notice/NoticeList'; 
+import NoticeForm from './notice/NoticeForm'; 
+import NoticeDetail from './notice/NoticeDetail'; 
 import Login from './user/Login';
 import MyPage from './user/MyPage';
 import ChangePassword from './user/ChangePassword';
-import Home from './Home';  // 홈 컴포넌트 추가
+import Home from './Home';
 import authService from './services/authService';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './assets/images/logo.png';
@@ -22,7 +24,7 @@ const Navbar = () => {
   const handleLogout = () => {
     authService.logout().then(() => {
       sessionStorage.removeItem('empno');
-      navigate('/'); // 로그아웃 후 홈으로 리다이렉트
+      navigate('/'); 
     });
   };
 
@@ -41,6 +43,9 @@ const Navbar = () => {
           </li>
           <li className="nav-item">
             <Link className="nav-link" to="/departments">부서 목록</Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/notices">공지사항</Link> {/* 공지사항 링크 추가 */}
           </li>
           {empno ? (
             <>
@@ -68,7 +73,7 @@ const App = () => {
       <div className="container">
         <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />  {/* 홈화면을 기본 경로에 설정 */}
+          <Route path="/" element={<Home />} />
           <Route path="/employees" element={<EmployeeList />} />
           <Route path="/view/:id" element={<EmployeeDetail />} />
           <Route path="/add" element={<EmployeeForm />} />
@@ -77,6 +82,10 @@ const App = () => {
           <Route path="/departments/add" element={<DeptForm />} />
           <Route path="/departments/edit/:id" element={<DeptForm />} />
           <Route path="/departments/detail/:deptno" element={<DeptDetail />} />
+          <Route path="/notices" element={<NoticeList />} />  {/* 추가 */}
+          <Route path="/notices/add" element={<NoticeForm />} />  {/* 추가 */}
+          <Route path="/notices/edit/:id" element={<NoticeForm />} />  {/* 추가 */}
+          <Route path="/notices/detail/:id" element={<NoticeDetail />} />  {/* 추가 */}
           <Route path="/login" element={<Login />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/change-password" element={<ChangePassword />} />

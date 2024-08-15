@@ -66,7 +66,7 @@ const DeptDetail = () => {
               <th>직급</th>
               <th>이메일</th>
               <th>전화번호</th>
-              <th>상세보기</th> {/* 사원 상세보기 버튼 추가 */}
+              <th>상세보기</th> 
             </tr>
           </thead>
           <tbody>
@@ -79,7 +79,7 @@ const DeptDetail = () => {
                 <td>{employee.phone}</td>
                 <td>
                   <Link to={`/view/${employee.empno}`} className="btn btn-info">상세보기</Link>
-                </td> {/* 상세보기 버튼 */}
+                </td> 
               </tr>
             ))}
           </tbody>
