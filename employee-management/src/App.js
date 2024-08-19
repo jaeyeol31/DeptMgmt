@@ -6,9 +6,12 @@ import EmployeeForm from './emp/EmployeeForm';
 import DeptList from './dept/DeptList';
 import DeptForm from './dept/DeptForm';
 import DeptDetail from './dept/DeptDetail';
-import NoticeList from './notice/NoticeList'; 
-import NoticeForm from './notice/NoticeForm'; 
-import NoticeDetail from './notice/NoticeDetail'; 
+import NoticeList from './notice/NoticeList';
+import NoticeForm from './notice/NoticeForm';
+import NoticeDetail from './notice/NoticeDetail';
+import DepartmentBoardList from './department/DepartmentBoardList'; // 부서 게시판 리스트 컴포넌트
+import DepartmentBoardForm from './department/DepartmentBoardForm'; // 부서 게시판 작성 및 수정 컴포넌트
+import DepartmentBoardDetail from './department/DepartmentBoardDetail'; // 부서 게시판 상세 컴포넌트
 import Login from './user/Login';
 import MyPage from './user/MyPage';
 import ChangePassword from './user/ChangePassword';
@@ -24,7 +27,7 @@ const Navbar = () => {
   const handleLogout = () => {
     authService.logout().then(() => {
       sessionStorage.removeItem('empno');
-      navigate('/'); 
+      navigate('/');
     });
   };
 
@@ -45,7 +48,10 @@ const Navbar = () => {
             <Link className="nav-link" to="/departments">부서 목록</Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/notices">공지사항</Link> {/* 공지사항 링크 추가 */}
+            <Link className="nav-link" to="/notices">공지사항</Link> {/* 공지사항 링크 */}
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/department-board">부서 게시판</Link> {/* 부서 게시판 링크 */}
           </li>
           {empno ? (
             <>
@@ -82,10 +88,14 @@ const App = () => {
           <Route path="/departments/add" element={<DeptForm />} />
           <Route path="/departments/edit/:id" element={<DeptForm />} />
           <Route path="/departments/detail/:deptno" element={<DeptDetail />} />
-          <Route path="/notices" element={<NoticeList />} />  {/* 추가 */}
-          <Route path="/notices/add" element={<NoticeForm />} />  {/* 추가 */}
-          <Route path="/notices/edit/:id" element={<NoticeForm />} />  {/* 추가 */}
-          <Route path="/notices/detail/:id" element={<NoticeDetail />} />  {/* 추가 */}
+          <Route path="/notices" element={<NoticeList />} />
+          <Route path="/notices/add" element={<NoticeForm />} />
+          <Route path="/notices/edit/:id" element={<NoticeForm />} />
+          <Route path="/notices/detail/:id" element={<NoticeDetail />} />
+          <Route path="/department-board" element={<DepartmentBoardList />} /> {/* 부서 게시판 리스트 */}
+          <Route path="/department-board/create" element={<DepartmentBoardForm />} /> {/* 부서 게시판 글 작성 */}
+          <Route path="/department-board/edit/:id" element={<DepartmentBoardForm />} /> {/* 부서 게시판 글 수정 */}
+          <Route path="/department-board/:id" element={<DepartmentBoardDetail />} /> {/* 부서 게시판 글 상세 */}
           <Route path="/login" element={<Login />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/change-password" element={<ChangePassword />} />
