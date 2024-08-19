@@ -14,9 +14,8 @@ import lombok.Data;
 public class Dept {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "deptno")
-    private Integer deptno;
+    private Integer deptno;  // 자동 생성이 아닌 수동 입력으로 변경
 
     @Column(name = "dname")
     private String dname;

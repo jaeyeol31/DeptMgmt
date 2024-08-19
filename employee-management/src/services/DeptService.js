@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const DEPT_API_BASE_URL = "http://localhost:8080/api/depts"; // 서버의 실제 엔드포인트로 업데이트
+const DEPT_API_BASE_URL = "http://localhost:8080/api/depts";
 
 class DeptService {
 
@@ -22,6 +22,11 @@ class DeptService {
 
     deleteDept(deptno) {
         return axios.delete(`${DEPT_API_BASE_URL}/${deptno}`);
+    }
+
+    // 부서 번호가 존재하는지 확인하는 API 호출
+    checkDeptnoExists(deptno) {
+        return axios.get(`${DEPT_API_BASE_URL}/checkDeptnoExists`, { params: { deptno } });
     }
 }
 

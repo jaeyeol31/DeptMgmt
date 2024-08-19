@@ -22,9 +22,13 @@ const DeptDetail = () => {
       });
 
       // 부서의 매니저 정보를 가져옴
-      EmployeeService.getManagerByDept(deptno).then((response) => {
-        setManager(response);
-      });
+      EmployeeService.getManagerByDept(deptno)
+        .then((response) => {
+          setManager(response.data);
+        })
+        .catch(() => {
+          setManager(null);  // 매니저가 없는 경우 null로 설정
+        });
     }
   }, [deptno]);
 

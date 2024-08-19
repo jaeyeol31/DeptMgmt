@@ -48,15 +48,15 @@ public class EmployeeController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@GetMapping("/manager")
-	public ResponseEntity<Employee> getManagerByDeptNo(@RequestParam("deptno") int deptNo) {
-		Optional<Employee> managerOpt = employeeService.getManagerByDeptNo(deptNo);
-		if (managerOpt.isPresent()) {
-			return ResponseEntity.ok(managerOpt.get());
-		} else {
-			return ResponseEntity.status(404).body(null); // 매니저를 찾지 못한 경우
-		}
-	}
+	@GetMapping("/api/employees/manager")
+    public ResponseEntity<Employee> getManagerByDeptNo(@RequestParam("deptno") int deptNo) {
+        Optional<Employee> managerOpt = employeeService.getManagerByDeptNo(deptNo);
+        if (managerOpt.isPresent()) {
+            return ResponseEntity.ok(managerOpt.get());
+        } else {
+            return ResponseEntity.status(404).body(null); // 매니저를 찾지 못한 경우
+        }
+    }
 
 	@PostMapping("/change-password")
 	public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest,

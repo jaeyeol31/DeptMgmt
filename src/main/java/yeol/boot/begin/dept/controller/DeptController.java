@@ -19,7 +19,7 @@ public class DeptController {
 
     @Autowired
     private EmployeeService employeeService;
-    
+
     @GetMapping
     public List<Dept> getAllDepts() {
         return deptService.getAllDepts();
@@ -28,13 +28,14 @@ public class DeptController {
     @GetMapping("/{deptno}")
     public ResponseEntity<Dept> getDeptById(@PathVariable("deptno") Integer deptno) {
         Dept dept = deptService.getDeptById(deptno)
-                .orElseThrow(() -> new RuntimeException("Dept not found"));
+                .orElseThrow(() -> new RuntimeException("부서를 찾을 수 없습니다."));
         return ResponseEntity.ok(dept);
     }
 
     @GetMapping("/{deptno}/employees")
-    public List<Employee> getEmployeesByDept(@PathVariable("deptno") Integer deptno) {
-        return employeeService.getEmployeesByDept(deptno);
+    public ResponseEntity<List<Employee>> getEmployeesByDept(@PathVariable("deptno") Integer deptno) {
+        List<Employee> employees = employeeService.getEmployeesByDept(deptno);
+        return ResponseEntity.ok(employees);  // 사원이 없으면 빈 리스트 반환
     }
 
     @PostMapping
@@ -52,5 +53,12 @@ public class DeptController {
     public ResponseEntity<Void> deleteDept(@PathVariable("deptno") Integer deptno) {
         deptService.deleteDept(deptno);
         return ResponseEntity.noContent().build();
+    }
+
+    // 부서 번호 존재 여부 확인 엔드포인트
+    @GetMapping("/checkDeptnoExists")
+    public ResponseEntity<Boolean> checkDeptnoExists(@RequestParam("deptno") Integer deptno) {
+        boolean exists = deptService.getDeptById(deptno).isPresent();
+        return ResponseEntity.ok(exists);
     }
 }
