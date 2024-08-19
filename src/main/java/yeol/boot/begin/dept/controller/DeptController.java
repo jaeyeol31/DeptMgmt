@@ -32,6 +32,7 @@ public class DeptController {
         return ResponseEntity.ok(dept);
     }
 
+
     @GetMapping("/{deptno}/employees")
     public ResponseEntity<List<Employee>> getEmployeesByDept(@PathVariable("deptno") Integer deptno) {
         List<Employee> employees = employeeService.getEmployeesByDept(deptno);

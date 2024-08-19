@@ -65,4 +65,9 @@ public class DepartmentBoardPostController {
         postService.deletePost(id);
         return ResponseEntity.noContent().build();
     }
+    
+    @GetMapping("/department/{deptNo}")
+    public List<DepartmentBoardPost> getPostsByDeptNo(@PathVariable("deptNo") Integer deptNo) {
+        return postService.getPostsByDeptNo(deptNo);
+    }
 }
