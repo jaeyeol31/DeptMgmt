@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
 import EmployeeList from './emp/EmployeeList';
 import EmployeeDetail from './emp/EmployeeDetail';
@@ -9,27 +9,80 @@ import DeptDetail from './dept/DeptDetail';
 import NoticeList from './notice/NoticeList';
 import NoticeForm from './notice/NoticeForm';
 import NoticeDetail from './notice/NoticeDetail';
-import DepartmentBoardList from './department/DepartmentBoardList'; // 부서 게시판 리스트 컴포넌트
-import DepartmentBoardForm from './department/DepartmentBoardForm'; // 부서 게시판 작성 및 수정 컴포넌트
-import DepartmentBoardDetail from './department/DepartmentBoardDetail'; // 부서 게시판 상세 컴포넌트
+import DepartmentBoardList from './department/DepartmentBoardList'; 
+import DepartmentBoardForm from './department/DepartmentBoardForm'; 
+import DepartmentBoardDetail from './department/DepartmentBoardDetail'; 
 import Login from './user/Login';
 import MyPage from './user/MyPage';
 import ChangePassword from './user/ChangePassword';
 import Home from './Home';
 import authService from './services/authService';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './assets/images/logo.png';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const empno = sessionStorage.getItem('empno');
+  const [timeLeft, setTimeLeft] = useState(null);
+  const [intervalId, setIntervalId] = useState(null);
 
   const handleLogout = () => {
     authService.logout().then(() => {
       sessionStorage.removeItem('empno');
+      clearInterval(intervalId);
       navigate('/');
     });
   };
+
+  const checkSessionTime = () => {
+    const sessionStartTime = parseInt(sessionStorage.getItem('sessionStartTime'), 10);
+    const sessionTimeout = parseInt(sessionStorage.getItem('sessionTimeout'), 10);
+
+    if (!isNaN(sessionStartTime) && !isNaN(sessionTimeout)) {
+      const currentTime = Date.now();
+      const timeLeft = sessionStartTime + sessionTimeout - currentTime;
+
+      if (timeLeft > 0) {
+        setTimeLeft(Math.floor(timeLeft / 1000));  // 1초 단위로 시간 계산
+      } else {
+        setTimeLeft(0);
+        clearInterval(intervalId);
+        alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+        handleLogout();
+      }
+
+      if (timeLeft <= 30000 && timeLeft > 0) { // 30초 남았을 때
+        if (window.confirm('세션이 곧 만료됩니다. 연장하시겠습니까?')) {
+          axios.get('/api/auth/extend-session')
+            .then(() => {
+              const newSessionStartTime = Date.now();
+              sessionStorage.setItem('sessionStartTime', newSessionStartTime);
+              setTimeLeft(sessionTimeout / 1000); // 세션 타임아웃 초기화
+              alert('세션이 연장되었습니다.');
+            })
+            .catch(error => {
+              console.error('세션 연장 중 오류가 발생했습니다.', error);
+            });
+        }
+      }
+    } else {
+      setTimeLeft(null);
+    }
+  };
+
+  useEffect(() => {
+    const sessionTimeout = 600000; // 10분 (600,000 밀리초)
+    const sessionStartTime = Date.now();
+
+    sessionStorage.setItem('sessionStartTime', sessionStartTime.toString());
+    sessionStorage.setItem('sessionTimeout', sessionTimeout.toString());
+
+    const intervalId = setInterval(checkSessionTime, 1000); // 1초마다 체크
+    setIntervalId(intervalId);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -48,10 +101,10 @@ const Navbar = () => {
             <Link className="nav-link" to="/departments">부서 목록</Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/notices">공지사항</Link> {/* 공지사항 링크 */}
+            <Link className="nav-link" to="/notices">공지사항</Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/department-board">부서 게시판</Link> {/* 부서 게시판 링크 */}
+            <Link className="nav-link" to="/department-board">부서 게시판</Link>
           </li>
           {empno ? (
             <>
@@ -60,6 +113,11 @@ const Navbar = () => {
               </li>
               <li className="nav-item">
                 <button className="nav-link btn btn-link" onClick={handleLogout}>로그아웃</button>
+              </li>
+              <li className="nav-item">
+                <span className="nav-link">
+                  {timeLeft !== null ? `세션 만료까지 남은 시간: ${timeLeft}초` : '세션 정보 없음'}
+                </span>
               </li>
             </>
           ) : (
@@ -92,10 +150,10 @@ const App = () => {
           <Route path="/notices/add" element={<NoticeForm />} />
           <Route path="/notices/edit/:id" element={<NoticeForm />} />
           <Route path="/notices/detail/:id" element={<NoticeDetail />} />
-          <Route path="/department-board" element={<DepartmentBoardList />} /> {/* 부서 게시판 리스트 */}
-          <Route path="/department-board/create" element={<DepartmentBoardForm />} /> {/* 부서 게시판 글 작성 */}
-          <Route path="/department-board/edit/:id" element={<DepartmentBoardForm />} /> {/* 부서 게시판 글 수정 */}
-          <Route path="/department-board/:id" element={<DepartmentBoardDetail />} /> {/* 부서 게시판 글 상세 */}
+          <Route path="/department-board" element={<DepartmentBoardList />} />
+          <Route path="/department-board/create" element={<DepartmentBoardForm />} />
+          <Route path="/department-board/edit/:id" element={<DepartmentBoardForm />} />
+          <Route path="/department-board/:id" element={<DepartmentBoardDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/change-password" element={<ChangePassword />} />

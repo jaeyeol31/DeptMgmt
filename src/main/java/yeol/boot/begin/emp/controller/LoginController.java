@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +44,12 @@ public class LoginController {
     public ResponseEntity<Void> logout(HttpSession session) {
         session.invalidate();  // 세션 무효화
         return ResponseEntity.noContent().build();
+    }
+ // 세션 유지 연장용 API
+    @GetMapping("/extend-session")
+    public ResponseEntity<Void> extendSession(HttpSession session) {
+        session.setMaxInactiveInterval(session.getMaxInactiveInterval()); // 세션 시간 연장
+        return ResponseEntity.ok().build();
     }
 }
 
