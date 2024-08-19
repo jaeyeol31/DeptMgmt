@@ -88,21 +88,14 @@ const DepartmentBoardList = () => {
       <Link to="/department-board/create" className="btn btn-primary mb-3">글 작성</Link>
       <table className="table">
         <thead>
-          <tr>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>부서명</th> {/* 부서명 컬럼 추가 */}
-            <th>작성일</th>
-          </tr>
+          <tr><th>제목</th><th>작성자</th><th>부서명</th><th>작성일</th></tr>
         </thead>
         <tbody>
           {filteredPosts.map(post => (
             <tr key={post.id}>
-              <td>
-                <Link to={`/department-board/${post.id}`}>{post.title}</Link>
-              </td>
+              <td><Link to={`/department-board/${post.id}`}>{post.title}</Link></td>
               <td>{post.author}</td>
-              <td>{deptMap[post.deptNo]}</td> {/* 부서명을 매핑하여 표시 */}
+              <td>{deptMap[post.deptNo]}</td>
               <td>{new Date(post.createdAt).toLocaleDateString()}</td>
             </tr>
           ))}

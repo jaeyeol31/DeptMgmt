@@ -6,16 +6,29 @@ const DepartmentBoardDetail = () => {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const navigate = useNavigate();
+  const loggedInEmpNo = sessionStorage.getItem('empno') || '0'; // 올바른 키 사용
 
   useEffect(() => {
     axios.get(`/api/department-board/${id}`)
       .then(response => {
+        console.log('Response data:', response.data);
         setPost(response.data);
       })
       .catch(error => {
         console.error('There was an error fetching the post!', error);
       });
   }, [id]);
+
+  if (!post) {
+    return <div>Loading...</div>;
+  }
+
+  const canEditOrDelete = parseInt(loggedInEmpNo) === parseInt(post.empNo);
+
+  console.log('SessionStorage:', sessionStorage);
+  console.log('loggedInEmpNo:', loggedInEmpNo, typeof loggedInEmpNo);
+  console.log('post.empNo:', post.empNo, typeof post.empNo);
+  console.log('canEditOrDelete:', canEditOrDelete);
 
   const handleEditClick = () => {
     navigate(`/department-board/edit/${id}`);
@@ -34,10 +47,6 @@ const DepartmentBoardDetail = () => {
     }
   };
 
-  if (!post) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div>
       <h2>{post.title}</h2>
@@ -46,8 +55,13 @@ const DepartmentBoardDetail = () => {
       <hr />
       <p>{post.content}</p>
       <Link to="/department-board" className="btn btn-primary">목록으로 돌아가기</Link>
-      <button onClick={handleEditClick} className="btn btn-warning">수정</button>
-      <button onClick={handleDeleteClick} className="btn btn-danger" style={{ marginLeft: '10px' }}>삭제</button>
+
+      {canEditOrDelete && (
+        <>
+          <button onClick={handleEditClick} className="btn btn-warning" style={{ marginLeft: '10px' }}>수정</button>
+          <button onClick={handleDeleteClick} className="btn btn-danger" style={{ marginLeft: '10px' }}>삭제</button>
+        </>
+      )}
     </div>
   );
 };
