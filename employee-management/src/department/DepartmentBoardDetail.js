@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import Comments from './Comments';
 
 const DepartmentBoardDetail = () => {
   const { id } = useParams();
@@ -62,6 +63,7 @@ const DepartmentBoardDetail = () => {
           <button onClick={handleDeleteClick} className="btn btn-danger" style={{ marginLeft: '10px' }}>삭제</button>
         </>
       )}
+     <Comments postId={id} />
     </div>
   );
 };

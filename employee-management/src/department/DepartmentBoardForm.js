@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getDepartmentName } from '../constants'; // 해당 경로에 맞게 수정하세요
+import { getDepartmentName } from '../constants'; // 해당 경로에 맞게 
+
 
 const DepartmentBoardForm = () => {
   const [title, setTitle] = useState(''); // 빈 문자열로 초기화
