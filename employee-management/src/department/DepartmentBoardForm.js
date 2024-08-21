@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import { getDepartmentName } from '../constants'; // 해당 경로에 맞게 수정하세요
 
 const DepartmentBoardForm = () => {
   const [title, setTitle] = useState(''); // 빈 문자열로 초기화
   const [content, setContent] = useState(''); // 빈 문자열로 초기화
   const [author, setAuthor] = useState(''); // 빈 문자열로 초기화
-  const [deptName, setDeptName] = useState(''); // 빈 문자열로 초기화
   const [deptNo, setDeptNo] = useState(null); // 부서 번호를 저장할 상태 추가
   const { id } = useParams(); // 수정할 게시글의 ID
   const navigate = useNavigate();
@@ -21,7 +21,6 @@ const DepartmentBoardForm = () => {
           const employee = response.data;
           console.log('Fetched employee:', employee); // 직원 정보가 올바르게 가져와지는지 확인
           setAuthor(employee.ename);
-          setDeptName(employee.deptName);
           setDeptNo(employee.deptno); // 부서 번호 설정
         })
         .catch(error => {
@@ -83,6 +82,8 @@ const DepartmentBoardForm = () => {
     }
   };
 
+  const deptName = getDepartmentName(deptNo); // 부서 번호를 이용해 부서명을 가져옴
+
   return (
     <div>
       <h2>{id ? '글 수정' : '글 작성'}</h2>
@@ -92,7 +93,7 @@ const DepartmentBoardForm = () => {
           <input
             type="text"
             className="form-control"
-            value={title}
+            value={title || ''}  // title이 undefined일 경우 빈 문자열로 대체
             onChange={(e) => {
               console.log('Title changed:', e.target.value); // 제목 변경 로그
               setTitle(e.target.value);
@@ -104,7 +105,7 @@ const DepartmentBoardForm = () => {
           <label>내용</label>
           <textarea
             className="form-control"
-            value={content}
+            value={content || ''}  // content가 undefined일 경우 빈 문자열로 대체
             onChange={(e) => {
               console.log('Content changed:', e.target.value); // 내용 변경 로그
               setContent(e.target.value);
@@ -117,7 +118,7 @@ const DepartmentBoardForm = () => {
           <input
             type="text"
             className="form-control"
-            value={author}
+            value={author || ''}  // author가 undefined일 경우 빈 문자열로 대체
             readOnly
           />
         </div>
@@ -126,7 +127,7 @@ const DepartmentBoardForm = () => {
           <input
             type="text"
             className="form-control"
-            value={deptName}
+            value={deptName || ''}  // deptName이 undefined일 경우 빈 문자열로 대체
             readOnly
           />
         </div>
