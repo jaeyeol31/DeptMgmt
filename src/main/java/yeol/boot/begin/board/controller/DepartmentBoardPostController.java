@@ -43,6 +43,12 @@ public class DepartmentBoardPostController {
     @PostMapping
     public DepartmentBoardPost createPost(@RequestBody DepartmentBoardPost post, HttpSession session) {
         Long empNo = (Long) session.getAttribute("empno");
+        if (empNo == null) {
+            throw new RuntimeException("Employee number not found in session.");
+        }
+        // 추가적인 로그 출력
+        System.out.println("empNo from session: " + empNo);
+        
         Employee employee = employeeService.getEmployeeByEmpno(empNo)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
 
