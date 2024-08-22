@@ -16,64 +16,70 @@ import java.util.List;
 @RequestMapping("/api/department-board")
 public class DepartmentBoardPostController {
 
-    @Autowired
-    private DepartmentBoardPostService postService;
+	@Autowired
+	private DepartmentBoardPostService postService;
 
-    @Autowired
-    private EmployeeService employeeService;
+	@Autowired
+	private EmployeeService employeeService;
 
-    @GetMapping
-    public List<DepartmentBoardPost> getAllPosts(HttpSession session) {
-        Integer deptNo = (Integer) session.getAttribute("deptno");
-        if (deptNo != null) {
-            return postService.getPostsByDeptNo(deptNo);
-        } else {
-            return postService.getAllPosts(); // 전체 게시물 조회
-        }
-    }
+	@GetMapping
+	public List<DepartmentBoardPost> getAllPosts(HttpSession session) {
+		Integer deptNo = (Integer) session.getAttribute("deptno");
+		if (deptNo != null) {
+			return postService.getPostsByDeptNo(deptNo);
+		} else {
+			return postService.getAllPosts(); // 전체 게시물 조회
+		}
+	}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<DepartmentBoardPost> getPostById(@PathVariable("id") Long id) {
-        DepartmentBoardPost post = postService.getPostById(id)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
-        return ResponseEntity.ok(post);
-    }
+	@GetMapping("/{id}")
+	public ResponseEntity<DepartmentBoardPost> getPostById(@PathVariable("id") Long id) {
+		DepartmentBoardPost post = postService.getPostById(id)
+				.orElseThrow(() -> new RuntimeException("Post not found"));
+		return ResponseEntity.ok(post);
+	}
 
+	@PostMapping
+	public DepartmentBoardPost createPost(@RequestBody DepartmentBoardPost post, HttpSession session) {
+		Long empNo = (Long) session.getAttribute("empno");
+		if (empNo == null) {
+			throw new RuntimeException("Employee number not found in session.");
+		}
+		// 추가적인 로그 출력
+		System.out.println("empNo from session: " + empNo);
 
-    @PostMapping
-    public DepartmentBoardPost createPost(@RequestBody DepartmentBoardPost post, HttpSession session) {
-        Long empNo = (Long) session.getAttribute("empno");
-        if (empNo == null) {
-            throw new RuntimeException("Employee number not found in session.");
-        }
-        // 추가적인 로그 출력
-        System.out.println("empNo from session: " + empNo);
-        
-        Employee employee = employeeService.getEmployeeByEmpno(empNo)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+		Employee employee = employeeService.getEmployeeByEmpno(empNo)
+				.orElseThrow(() -> new RuntimeException("Employee not found"));
 
-        post.setEmpNo(empNo);
-        post.setAuthor(employee.getEname());
-        post.setDeptNo(employee.getDeptno());
+		post.setEmpNo(empNo);
+		post.setAuthor(employee.getEname());
+		post.setDeptNo(employee.getDeptno());
 
-        return postService.createPost(post);
-    }
+		return postService.createPost(post);
+	}
 
-    @PutMapping("/{id}")
-    public ResponseEntity<DepartmentBoardPost> updatePost(@PathVariable("id") Long id,
-                                                          @RequestBody DepartmentBoardPost postDetails) {
-        DepartmentBoardPost updatedPost = postService.updatePost(id, postDetails);
-        return ResponseEntity.ok(updatedPost);
-    }
+	@PutMapping("/{id}")
+	public ResponseEntity<DepartmentBoardPost> updatePost(@PathVariable("id") Long id,
+			@RequestBody DepartmentBoardPost postDetails) {
+		DepartmentBoardPost updatedPost = postService.updatePost(id, postDetails);
+		return ResponseEntity.ok(updatedPost);
+	}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable("id") Long id) {
-        postService.deletePost(id);
-        return ResponseEntity.noContent().build();
-    }
-    
-    @GetMapping("/department/{deptNo}")
-    public List<DepartmentBoardPost> getPostsByDeptNo(@PathVariable("deptNo") Integer deptNo) {
-        return postService.getPostsByDeptNo(deptNo);
-    }
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deletePost(@PathVariable("id") Long id) {
+		postService.deletePost(id);
+		return ResponseEntity.noContent().build();
+	}
+
+	@GetMapping("/department/{deptNo}")
+	public List<DepartmentBoardPost> getPostsByDeptNo(@PathVariable("deptNo") Integer deptNo) {
+		return postService.getPostsByDeptNo(deptNo);
+	}
+
+	@GetMapping("/dept/{deptNo}/recent")
+	public ResponseEntity<List<DepartmentBoardPost>> getRecentPostsByDeptNo(@PathVariable("deptNo") Integer deptNo,
+			@RequestParam(value = "limit", required = false, defaultValue = "5") int limit) {
+		List<DepartmentBoardPost> recentPosts = postService.getRecentPostsByDeptNo(deptNo, limit);
+		return ResponseEntity.ok(recentPosts);
+	}
 }

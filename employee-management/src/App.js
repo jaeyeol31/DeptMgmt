@@ -15,7 +15,7 @@ import DepartmentBoardDetail from './department/DepartmentBoardDetail';
 import Login from './user/Login';
 import MyPage from './user/MyPage';
 import ChangePassword from './user/ChangePassword';
-import Home from './Home';
+import Home from './home/Home';  // Home 컴포넌트 경로 수정
 import authService from './services/authService';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -85,9 +85,9 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light" style={styles.navbar}>
       <Link className="navbar-brand" to="/">
-        <img src={logo} alt="WODUF Logo" style={{ height: '40px' }} />
+        <img src={logo} alt="WODUF Logo" style={styles.logo} />
       </Link>
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul className="navbar-nav">
@@ -112,7 +112,7 @@ const Navbar = () => {
                 <Link className="nav-link" to="/mypage">마이페이지</Link>
               </li>
               <li className="nav-item">
-                <button className="nav-link btn btn-link" onClick={handleLogout}>로그아웃</button>
+                <button className="nav-link btn btn-link" onClick={handleLogout} style={styles.logoutButton}>로그아웃</button>
               </li>
               <li className="nav-item">
                 <span className="nav-link">
@@ -129,6 +129,23 @@ const Navbar = () => {
       </div>
     </nav>
   );
+};
+
+const styles = {
+  navbar: {
+    marginBottom: '20px',
+  },
+  logo: {
+    height: '40px',
+  },
+  logoutButton: {
+    cursor: 'pointer',
+    padding: '0',
+    border: 'none',
+    background: 'none',
+    color: '#007bff',
+    textDecoration: 'underline',
+  },
 };
 
 const App = () => {

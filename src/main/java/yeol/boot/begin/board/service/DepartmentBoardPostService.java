@@ -1,6 +1,7 @@
 package yeol.boot.begin.board.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import yeol.boot.begin.board.entity.DepartmentBoardPost;
 import yeol.boot.begin.board.repository.DepartmentBoardPostRepository;
@@ -46,5 +47,9 @@ public class DepartmentBoardPostService {
         DepartmentBoardPost post = postRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
         postRepository.delete(post);
+    }
+    
+    public List<DepartmentBoardPost> getRecentPostsByDeptNo(Integer deptNo, int limit) {
+        return postRepository.findTopByDeptNoOrderByCreatedAtDesc(deptNo, PageRequest.of(0, limit));
     }
 }
