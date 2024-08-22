@@ -112,7 +112,7 @@ const Navbar = () => {
                 <Link className="nav-link" to="/mypage">마이페이지</Link>
               </li>
               <li className="nav-item">
-                <button className="nav-link btn btn-link" onClick={handleLogout} style={styles.logoutButton}>로그아웃</button>
+                <Link className="nav-link" to="/" onClick={handleLogout} style={styles.navLink}>로그아웃</Link>
               </li>
               <li className="nav-item">
                 <span className="nav-link">

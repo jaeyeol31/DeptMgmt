@@ -36,7 +36,6 @@ const Home = () => {
     <div className="container" style={styles.container}>
       <div style={styles.welcomeSection}>
         <h1 style={styles.welcomeTitle}>환영합니다!</h1>
-        <h1 style={styles.welcomeTitle}>test</h1>
         <p style={styles.welcomeText}>우리 회사의 최신 소식과 업데이트를 확인하세요.</p>
       </div>
 
