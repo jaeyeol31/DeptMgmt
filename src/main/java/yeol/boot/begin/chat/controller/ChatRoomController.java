@@ -5,7 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import yeol.boot.begin.chat.entity.ChatRoom;
 import yeol.boot.begin.chat.service.ChatRoomService;
-
+import yeol.boot.begin.emp.entity.Employee;
+import yeol.boot.begin.emp.service.EmployeeService;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,15 +16,31 @@ import java.util.Optional;
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
+    private final EmployeeService employeeService;
 
     @Autowired
-    public ChatRoomController(ChatRoomService chatRoomService) {
+    public ChatRoomController(ChatRoomService chatRoomService, EmployeeService employeeService) {
         this.chatRoomService = chatRoomService;
+        this.employeeService = employeeService;
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ChatRoom> createChatRoom(@RequestParam(name = "roomName") String roomName, 
-                                                   @RequestParam(name = "participants") String participants) {
+    public ResponseEntity<?> createChatRoom(@RequestParam("participants") String participants,
+                                            @RequestParam("empnoSelf") String empnoSelf) {
+        if (participants.contains(empnoSelf)) {
+            return ResponseEntity.badRequest().body("본인과는 채팅할 수 없습니다.");
+        }
+        
+        participants = empnoSelf + "," + participants;
+        String[] empnoArray = participants.split(",");
+        List<String> participantNames = new ArrayList<>();
+
+        for (String empno : empnoArray) {
+            Optional<Employee> employee = employeeService.getEmployeeByEmpno(Long.parseLong(empno));
+            employee.ifPresent(emp -> participantNames.add(emp.getEname()));
+        }
+
+        String roomName = String.join(", ", participantNames) + "의 대화방";
         ChatRoom chatRoom = chatRoomService.createChatRoom(roomName, participants);
         return ResponseEntity.ok(chatRoom);
     }
