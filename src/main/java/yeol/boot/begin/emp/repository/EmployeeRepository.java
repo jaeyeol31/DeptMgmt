@@ -14,5 +14,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     List<Employee> findByDeptno(int deptno);
     
+    List<Employee> findByEnameContainingIgnoreCase(String ename);
     
 }

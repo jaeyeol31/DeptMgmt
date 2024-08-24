@@ -100,4 +100,8 @@ public class EmployeeService {
 	public List<Employee> getEmployeesByDept(int deptno) {
 		return employeeRepository.findByDeptno(deptno);
 	}
+	
+	public List<Employee> searchEmployeesByName(String name) {
+        return employeeRepository.findByEnameContainingIgnoreCase(name);
+    }
 }

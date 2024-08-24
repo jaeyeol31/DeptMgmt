@@ -78,4 +78,10 @@ public class EmployeeController {
 		List<Employee> employees = employeeService.getEmployeesByDept(deptNo);
 		return ResponseEntity.ok(employees);
 	}
+	
+	 @GetMapping("/search")
+	    public ResponseEntity<List<Employee>> searchEmployeesByName(@RequestParam("name") String name) {
+	        List<Employee> employees = employeeService.searchEmployeesByName(name);
+	        return ResponseEntity.ok(employees);
+	    }
 }

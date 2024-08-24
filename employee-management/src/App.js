@@ -20,6 +20,7 @@ import authService from './services/authService';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './assets/images/logo.png';
+import ChatPage from './chat/ChatPage';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -106,6 +107,9 @@ const Navbar = () => {
           <li className="nav-item">
             <Link className="nav-link" to="/department-board">부서 게시판</Link>
           </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/chat">채팅</Link> {/* 채팅 페이지 추가 */}
+          </li>
           {empno ? (
             <>
               <li className="nav-item">
@@ -174,6 +178,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/change-password" element={<ChangePassword />} />
+          <Route path="/chat" element={<ChatPage />} />
         </Routes>
       </div>
     </Router>
