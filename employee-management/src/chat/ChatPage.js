@@ -66,6 +66,15 @@ const styles = {
     flex: 1,
     marginRight: '10px',
   },
+  selectedUserContainer: {
+    marginTop: '20px',
+  },
+  selectedUserList: {
+    padding: '10px',
+    borderRadius: '5px',
+    backgroundColor: '#f1f1f1',
+    border: '1px solid #ddd',
+  },
 };
 
 const ChatPage = () => {
@@ -76,6 +85,7 @@ const ChatPage = () => {
   const [selectedChatRoom, setSelectedChatRoom] = useState(null);
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
+  const empnoSelf = sessionStorage.getItem('empno'); // 본인 사원 번호
 
   useEffect(() => {
     connect();
@@ -117,37 +127,9 @@ const ChatPage = () => {
       const newMessage = JSON.parse(message.body);
       console.log("Parsed message:", newMessage);
       setMessages((prevMessages) => [...prevMessages, newMessage]);
-
-      // Send ACK to the server
-      sendAck(newMessage.id);
-
-      console.log("Messages state updated:", messages);
     } else {
       console.warn("Received message has no body:", message);
     }
-  };
-
-  const sendAck = (messageId) => {
-    const ackMessage = { messageId: messageId };
-    console.log("Sending ACK for message ID:", messageId);
-
-    fetch('http://localhost:8080/api/messages/ack', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(ackMessage),
-    })
-      .then(response => {
-        if (response.ok) {
-          console.log("ACK sent successfully for message ID:", messageId);
-        } else {
-          console.error("Failed to send ACK for message ID:", messageId);
-        }
-      })
-      .catch(error => {
-        console.error("Error sending ACK:", error);
-      });
   };
 
   const sendMessage = async () => {
@@ -161,7 +143,7 @@ const ChatPage = () => {
       console.log("Sending message:", chatMessage);
 
       stompClient.publish({
-        destination: '/pub/message',
+        destination: '/app/message',  // WebSocket 경로를 백엔드와 일치시킴
         body: JSON.stringify(chatMessage),
       });
 
@@ -219,7 +201,7 @@ const ChatPage = () => {
         const response = await fetch(`http://localhost:8080/api/employees/search?name=${encodedName}`);
         const employees = await response.json();
         console.log("Search results:", employees);
-        setSearchResults(employees);
+        setSearchResults(employees.filter(employee => employee.empno !== parseInt(empnoSelf))); // 본인 제외
       } else {
         setSearchResults([]);
       }
@@ -235,17 +217,12 @@ const ChatPage = () => {
     } else {
       setSelectedEmployees([...selectedEmployees, employee]);
     }
-    console.log("Selected employees:", selectedEmployees);
   };
 
   const handleStartChat = async () => {
-    const empnoSelf = sessionStorage.getItem('empno');
-    const filteredEmployees = selectedEmployees.filter((emp) => emp.empno !== empnoSelf);
+    const participantEmpnos = selectedEmployees.map((emp) => emp.empno).join(',');
 
-    if (filteredEmployees.length > 0) {
-      const participantEmpnos = filteredEmployees.map((emp) => emp.empno).join(',');
-      console.log("Starting chat with participants:", participantEmpnos);
-
+    try {
       const response = await fetch(`http://localhost:8080/api/chat/create?participants=${participantEmpnos}&empnoSelf=${empnoSelf}`, {
         method: 'POST',
       });
@@ -254,10 +231,12 @@ const ChatPage = () => {
         fetchChatRooms();
         setSelectedEmployees([]);
       } else {
-        console.error('Failed to create chat room');
+        const errorMessage = await response.text();
+        alert(`채팅방 생성 실패: ${errorMessage}`);
       }
-    } else {
-      alert("본인과는 채팅할 수 없습니다.");
+    } catch (error) {
+      console.error('채팅방 생성 중 오류 발생:', error);
+      alert('채팅방 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
     }
   };
 
@@ -282,35 +261,52 @@ const ChatPage = () => {
         <ListGroup variant="flush">
           {searchResults.map((employee) => (
             <ListGroup.Item key={employee.empno}>
-              <Form.Check
-                type="checkbox"
-                label={employee.ename}
-                checked={!!selectedEmployees.find((e) => e.empno === employee.empno)}
-                onChange={() => handleCheckboxChange(employee)}
-              />
+              <div style={styles.employeeItem}>
+                <Form.Check
+                  type="checkbox"
+                  label={employee.ename}
+                  checked={!!selectedEmployees.find((e) => e.empno === employee.empno)}
+                  onChange={() => handleCheckboxChange(employee)}
+                />
+                <div style={styles.employeeDetails}>
+                  <div>부서: {employee.deptno}</div>
+                  <div>직급: {employee.job}</div>
+                </div>
+              </div>
             </ListGroup.Item>
           ))}
         </ListGroup>
-        <div className="mt-3">
-          <h5>선택된 사용자:</h5>
-          <ul>
-            {selectedEmployees.map((emp) => (
-              <li key={emp.empno}>{emp.ename}</li>
-            ))}
-          </ul>
-        </div>
-        <Button variant="primary" onClick={handleStartChat} className="mt-3">
+
+        {selectedEmployees.length > 0 && (
+          <div style={styles.selectedUserContainer}>
+            <h5>선택된 사용자:</h5>
+            <ul style={styles.selectedUserList}>
+              {selectedEmployees.map((emp) => (
+                <li key={emp.empno}>{emp.ename}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <Button variant="primary" onClick={handleStartChat} className="mt-3" disabled={selectedEmployees.length === 0}>
           채팅 시작
         </Button>
 
-        <h3 className="mt-4">내 채팅방</h3>
-        <ListGroup variant="flush">
-          {chatRooms.map((room) => (
-            <ListGroup.Item key={room.id} action onClick={() => openChatRoom(room)}>
-              {room.roomName}
-            </ListGroup.Item>
-          ))}
-        </ListGroup>
+        <div style={styles.chatRoomList}>
+          <h3>내 채팅방</h3>
+          <ListGroup variant="flush">
+            {chatRooms.map((room) => (
+              <ListGroup.Item
+                key={room.id}
+                action
+                style={selectedChatRoom?.id === room.id ? { ...styles.chatRoomItem, ...styles.chatRoomItemActive } : styles.chatRoomItem}
+                onClick={() => openChatRoom(room)}
+              >
+                {room.roomName}
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        </div>
       </div>
 
       <div style={styles.chatContent}>
