@@ -66,14 +66,14 @@ public class ChatMessageController {
         return message;
     }
 
-//    @PostMapping("/ack")
-//    public ResponseEntity<Void> acknowledgeMessage(@RequestBody Map<String, Object> ackData) {
-//        String messageId = ackData.get("messageId").toString();
-//
-//        logger.info("ACK received for message ID: " + messageId);
-//
-//        return ResponseEntity.ok().build();
-//    }
+    @PostMapping("/ack")
+    public ResponseEntity<Void> acknowledgeMessage(@RequestBody Map<String, Object> ackData) {
+        String messageId = ackData.get("messageId").toString();
+
+        logger.info("ACK received for message ID: " + messageId);
+
+        return ResponseEntity.ok().build();
+    }
 
     @GetMapping("/employee/{empno}")
     public ResponseEntity<Employee> getEmployeeByEmpno(@PathVariable("empno") Long empno) {

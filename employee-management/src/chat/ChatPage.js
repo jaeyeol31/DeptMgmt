@@ -5,6 +5,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import dayjs from 'dayjs'; // 날짜 및 시간 처리를 위해 dayjs 라이브러리 사용
 
 let stompClient = null;
 
@@ -36,6 +37,14 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
   },
+  dateLabel: {
+    alignSelf: 'center',
+    margin: '10px 0',
+    padding: '5px 10px',
+    backgroundColor: '#e4e6eb',
+    borderRadius: '10px',
+    color: '#555',
+  },
   chatMessage: {
     marginBottom: '10px',
     display: 'flex',
@@ -55,6 +64,12 @@ const styles = {
     padding: '10px',
     borderRadius: '10px',
     border: '1px solid #ddd',
+  },
+  timeLabel: {
+    fontSize: '0.8em',
+    color: '#888',
+    marginLeft: '10px',
+    alignSelf: 'flex-end',
   },
   chatInputArea: {
     display: 'flex',
@@ -123,6 +138,9 @@ const ChatPage = () => {
 
       setMessages((prevMessages) => [...prevMessages, { ...newMessage, senderName }]);
 
+      // Send ACK to the server
+      sendAck(newMessage.id);
+
       console.log("Messages state updated:", messages);
     } else {
       console.warn("Received message has no body:", message);
@@ -139,6 +157,29 @@ const ChatPage = () => {
     return employee.ename;
   };
 
+  const sendAck = (messageId) => {
+    const ackMessage = { messageId: messageId };
+    console.log("Sending ACK for message ID:", messageId);
+
+    fetch('http://localhost:8080/api/messages/ack', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(ackMessage),
+    })
+      .then(response => {
+        if (response.ok) {
+          console.log("ACK sent successfully for message ID:", messageId);
+        } else {
+          console.error("Failed to send ACK for message ID:", messageId);
+        }
+      })
+      .catch(error => {
+        console.error("Error sending ACK:", error);
+      });
+  };
+
   const sendMessage = async () => {
     const messageContent = messageInput.trim();
     if (messageContent && stompClient && selectedChatRoom) {
@@ -146,6 +187,7 @@ const ChatPage = () => {
         senderId: sessionStorage.getItem('empno'),
         roomId: selectedChatRoom.id,
         content: messageContent,
+        createdAt: new Date().toISOString(), // 생성 시간 추가
       };
       console.log("Sending message:", chatMessage);
 
@@ -262,6 +304,49 @@ const ChatPage = () => {
     fetchMessages(room.id);
   };
 
+  const formatDate = (date) => {
+    return dayjs(date).format('YYYY년 M월 D일 dddd'); // 날짜 포맷팅
+  };
+
+  const formatTime = (date) => {
+    return dayjs(date).format('HH:mm'); // 시간 포맷팅
+  };
+
+  const renderMessages = () => {
+    let lastMessageDate = null;
+
+    return messages.map((msg, index) => {
+      const messageDate = dayjs(msg.createdAt).startOf('day');
+      const shouldShowDateLabel = !lastMessageDate || !messageDate.isSame(lastMessageDate);
+
+      lastMessageDate = messageDate;
+
+      return (
+        <React.Fragment key={index}>
+          {shouldShowDateLabel && (
+            <div style={styles.dateLabel}>{formatDate(msg.createdAt)}</div>
+          )}
+          <div
+            style={{
+              ...styles.chatMessage,
+              ...(msg.senderId === parseInt(sessionStorage.getItem('empno'))
+                ? styles.sent
+                : styles.received),
+            }}
+          >
+            <Card>
+              <Card.Header>
+                {msg.senderName}
+                <span style={styles.timeLabel}>{formatTime(msg.createdAt)}</span>
+              </Card.Header>
+              <Card.Body>{msg.content}</Card.Body>
+            </Card>
+          </div>
+        </React.Fragment>
+      );
+    });
+  };
+
   return (
     <div style={styles.chatPage}>
       <div style={styles.chatSidebar}>
@@ -312,22 +397,7 @@ const ChatPage = () => {
           <h4>{selectedChatRoom?.roomName || '채팅방을 선택하세요'}</h4>
         </div>
         <div style={styles.chatMessages}>
-          {messages.map((msg, index) => (
-            <div
-              key={index}
-              style={{
-                ...styles.chatMessage,
-                ...(msg.senderId === parseInt(sessionStorage.getItem('empno'))
-                  ? styles.sent
-                  : styles.received),
-              }}
-            >
-              <Card>
-                <Card.Header>{msg.senderName}</Card.Header> {/* 송신자 이름 추가 */}
-                <Card.Body>{msg.content}</Card.Body>
-              </Card>
-            </div>
-          ))}
+          {renderMessages()}
         </div>
         <div style={styles.chatInputArea}>
           <Form.Control
