@@ -23,39 +23,21 @@ public class ChatRoomController {
         this.chatRoomService = chatRoomService;
         this.employeeService = employeeService;
     }
-//
-//    @PostMapping("/create")
-//    public ResponseEntity<?> createChatRoom(@RequestParam("participants") String participants,
-//                                            @RequestParam("empnoSelf") String empnoSelf) {
-//        if (participants.contains(empnoSelf)) {
-//            return ResponseEntity.badRequest().body("본인과는 채팅할 수 없습니다.");
-//        }
-//        
-//        participants = empnoSelf + "," + participants;
-//        String[] empnoArray = participants.split(",");
-//        List<String> participantNames = new ArrayList<>();
-//
-//        for (String empno : empnoArray) {
-//            Optional<Employee> employee = employeeService.getEmployeeByEmpno(Long.parseLong(empno));
-//            employee.ifPresent(emp -> participantNames.add(emp.getEname()));
-//        }
-//
-//        String roomName = String.join(", ", participantNames) + "의 대화방";
-//        ChatRoom chatRoom = chatRoomService.createChatRoom(roomName, participants);
-//        return ResponseEntity.ok(chatRoom);
-//    }
+
     @PostMapping("/create")
     public ResponseEntity<?> createChatRoom(@RequestParam("participants") String participants,
                                             @RequestParam("empnoSelf") String empnoSelf) {
+        if (participants.contains(empnoSelf)) {
+            return ResponseEntity.badRequest().body("본인과는 채팅할 수 없습니다.");
+        }
+        
         participants = empnoSelf + "," + participants;
         String[] empnoArray = participants.split(",");
         List<String> participantNames = new ArrayList<>();
 
         for (String empno : empnoArray) {
             Optional<Employee> employee = employeeService.getEmployeeByEmpno(Long.parseLong(empno));
-            if (employee.isPresent()) {
-                participantNames.add(employee.get().getEname() + " (" + employee.get().getJob() + ", " + employee.get().getDeptno() + ")");
-            }
+            employee.ifPresent(emp -> participantNames.add(emp.getEname()));
         }
 
         String roomName = String.join(", ", participantNames) + "의 대화방";

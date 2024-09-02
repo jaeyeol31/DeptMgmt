@@ -66,15 +66,6 @@ const styles = {
     flex: 1,
     marginRight: '10px',
   },
-  selectedUserContainer: {
-    marginTop: '20px',
-  },
-  selectedUserList: {
-    padding: '10px',
-    borderRadius: '5px',
-    backgroundColor: '#f1f1f1',
-    border: '1px solid #ddd',
-  },
 };
 
 const ChatPage = () => {
@@ -85,7 +76,7 @@ const ChatPage = () => {
   const [selectedChatRoom, setSelectedChatRoom] = useState(null);
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
-  const empnoSelf = sessionStorage.getItem('empno'); // 본인 사원 번호
+  const [employeeCache, setEmployeeCache] = useState({}); // 사원 캐시
 
   useEffect(() => {
     connect();
@@ -121,15 +112,31 @@ const ChatPage = () => {
     console.log("Connected to WebSocket");
   };
 
-  const onMessageReceived = (message) => {
+  const onMessageReceived = async (message) => {
     console.log("Raw message received:", message);
     if (message.body) {
       const newMessage = JSON.parse(message.body);
       console.log("Parsed message:", newMessage);
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+      // 송신자 이름 가져오기
+      const senderName = await fetchEmployeeName(newMessage.senderId);
+
+      setMessages((prevMessages) => [...prevMessages, { ...newMessage, senderName }]);
+
+      console.log("Messages state updated:", messages);
     } else {
       console.warn("Received message has no body:", message);
     }
+  };
+
+  const fetchEmployeeName = async (empno) => {
+    if (employeeCache[empno]) {
+      return employeeCache[empno];
+    }
+    const response = await fetch(`/api/messages/employee/${empno}`);
+    const employee = await response.json();
+    setEmployeeCache(prevCache => ({ ...prevCache, [empno]: employee.ename }));
+    return employee.ename;
   };
 
   const sendMessage = async () => {
@@ -143,7 +150,7 @@ const ChatPage = () => {
       console.log("Sending message:", chatMessage);
 
       stompClient.publish({
-        destination: '/app/message',  // WebSocket 경로를 백엔드와 일치시킴
+        destination: '/pub/message',
         body: JSON.stringify(chatMessage),
       });
 
@@ -176,7 +183,12 @@ const ChatPage = () => {
       const sortedMessages = data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
       console.log("Messages fetched and sorted:", sortedMessages);
 
-      setMessages(sortedMessages);
+      // 각각의 메시지에 대해 송신자 이름 가져오기
+      for (const message of sortedMessages) {
+        message.senderName = await fetchEmployeeName(message.senderId);
+      }
+
+      setMessages(sortedMessages);  // 송신자 이름을 추가한 메시지 리스트를 저장
     } catch (error) {
       console.error('Failed to fetch messages:', error);
     }
@@ -201,7 +213,7 @@ const ChatPage = () => {
         const response = await fetch(`http://localhost:8080/api/employees/search?name=${encodedName}`);
         const employees = await response.json();
         console.log("Search results:", employees);
-        setSearchResults(employees.filter(employee => employee.empno !== parseInt(empnoSelf))); // 본인 제외
+        setSearchResults(employees);
       } else {
         setSearchResults([]);
       }
@@ -217,12 +229,17 @@ const ChatPage = () => {
     } else {
       setSelectedEmployees([...selectedEmployees, employee]);
     }
+    console.log("Selected employees:", selectedEmployees);
   };
 
   const handleStartChat = async () => {
-    const participantEmpnos = selectedEmployees.map((emp) => emp.empno).join(',');
+    const empnoSelf = sessionStorage.getItem('empno');
+    const filteredEmployees = selectedEmployees.filter((emp) => emp.empno !== empnoSelf);
 
-    try {
+    if (filteredEmployees.length > 0) {
+      const participantEmpnos = filteredEmployees.map((emp) => emp.empno).join(',');
+      console.log("Starting chat with participants:", participantEmpnos);
+
       const response = await fetch(`http://localhost:8080/api/chat/create?participants=${participantEmpnos}&empnoSelf=${empnoSelf}`, {
         method: 'POST',
       });
@@ -231,12 +248,10 @@ const ChatPage = () => {
         fetchChatRooms();
         setSelectedEmployees([]);
       } else {
-        const errorMessage = await response.text();
-        alert(`채팅방 생성 실패: ${errorMessage}`);
+        console.error('Failed to create chat room');
       }
-    } catch (error) {
-      console.error('채팅방 생성 중 오류 발생:', error);
-      alert('채팅방 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
+    } else {
+      alert("본인과는 채팅할 수 없습니다.");
     }
   };
 
@@ -261,52 +276,35 @@ const ChatPage = () => {
         <ListGroup variant="flush">
           {searchResults.map((employee) => (
             <ListGroup.Item key={employee.empno}>
-              <div style={styles.employeeItem}>
-                <Form.Check
-                  type="checkbox"
-                  label={employee.ename}
-                  checked={!!selectedEmployees.find((e) => e.empno === employee.empno)}
-                  onChange={() => handleCheckboxChange(employee)}
-                />
-                <div style={styles.employeeDetails}>
-                  <div>부서: {employee.deptno}</div>
-                  <div>직급: {employee.job}</div>
-                </div>
-              </div>
+              <Form.Check
+                type="checkbox"
+                label={employee.ename}
+                checked={!!selectedEmployees.find((e) => e.empno === employee.empno)}
+                onChange={() => handleCheckboxChange(employee)}
+              />
             </ListGroup.Item>
           ))}
         </ListGroup>
-
-        {selectedEmployees.length > 0 && (
-          <div style={styles.selectedUserContainer}>
-            <h5>선택된 사용자:</h5>
-            <ul style={styles.selectedUserList}>
-              {selectedEmployees.map((emp) => (
-                <li key={emp.empno}>{emp.ename}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        <Button variant="primary" onClick={handleStartChat} className="mt-3" disabled={selectedEmployees.length === 0}>
+        <div className="mt-3">
+          <h5>선택된 사용자:</h5>
+          <ul>
+            {selectedEmployees.map((emp) => (
+              <li key={emp.empno}>{emp.ename}</li>
+            ))}
+          </ul>
+        </div>
+        <Button variant="primary" onClick={handleStartChat} className="mt-3">
           채팅 시작
         </Button>
 
-        <div style={styles.chatRoomList}>
-          <h3>내 채팅방</h3>
-          <ListGroup variant="flush">
-            {chatRooms.map((room) => (
-              <ListGroup.Item
-                key={room.id}
-                action
-                style={selectedChatRoom?.id === room.id ? { ...styles.chatRoomItem, ...styles.chatRoomItemActive } : styles.chatRoomItem}
-                onClick={() => openChatRoom(room)}
-              >
-                {room.roomName}
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </div>
+        <h3 className="mt-4">내 채팅방</h3>
+        <ListGroup variant="flush">
+          {chatRooms.map((room) => (
+            <ListGroup.Item key={room.id} action onClick={() => openChatRoom(room)}>
+              {room.roomName}
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
       </div>
 
       <div style={styles.chatContent}>
@@ -325,6 +323,7 @@ const ChatPage = () => {
               }}
             >
               <Card>
+                <Card.Header>{msg.senderName}</Card.Header> {/* 송신자 이름 추가 */}
                 <Card.Body>{msg.content}</Card.Body>
               </Card>
             </div>

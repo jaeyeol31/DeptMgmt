@@ -10,66 +10,74 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import yeol.boot.begin.chat.entity.ChatMessage;
 import yeol.boot.begin.chat.service.ChatMessageService;
+import yeol.boot.begin.emp.entity.Employee;
+import yeol.boot.begin.emp.service.EmployeeService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/messages")
 public class ChatMessageController {
 
-	private static final Logger logger = LogManager.getLogger(ChatMessageController.class);
+    private static final Logger logger = LogManager.getLogger(ChatMessageController.class);
 
-	@Autowired
-	private ChatMessageService chatMessageService;
+    @Autowired
+    private ChatMessageService chatMessageService;
 
-	@Autowired
-	private SimpMessagingTemplate messagingTemplate;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
-	@PostMapping("/send")
-	public ResponseEntity<ChatMessage> sendMessage(@RequestBody ChatMessage message) {
-		logger.info("Received message to save: " + message);
+    @Autowired
+    private EmployeeService employeeService;
 
-		ChatMessage savedMessage = chatMessageService.saveMessage(message);
+    @PostMapping("/send")
+    public ResponseEntity<ChatMessage> sendMessage(@RequestBody ChatMessage message) {
+        logger.info("Received message to save: " + message);
 
-		logger.info("Message saved: " + savedMessage);
+        ChatMessage savedMessage = chatMessageService.saveMessage(message);
 
-		String destination = "/topic/chatroom/" + message.getRoomId();
-		logger.info("Sending message to chat room: " + destination + " with content: " + savedMessage.getContent());
+        logger.info("Message saved: " + savedMessage);
 
-		messagingTemplate.convertAndSend(destination, savedMessage);
+        String destination = "/topic/chatroom/" + message.getRoomId();
+        logger.info("Sending message to chat room: " + destination + " with content: " + savedMessage.getContent());
 
-		return ResponseEntity.ok(savedMessage);
-	}
+        messagingTemplate.convertAndSend(destination, savedMessage);
 
-	@GetMapping("/room/{roomId}")
-	public ResponseEntity<List<ChatMessage>> getMessagesByRoom(@PathVariable("roomId") Long roomId) {
-		logger.info("Fetching messages for room ID: " + roomId);
+        return ResponseEntity.ok(savedMessage);
+    }
 
-		List<ChatMessage> messages = chatMessageService.getMessagesByRoomId(roomId);
+    @GetMapping("/room/{roomId}")
+    public ResponseEntity<List<ChatMessage>> getMessagesByRoom(@PathVariable("roomId") Long roomId) {
+        logger.info("Fetching messages for room ID: " + roomId);
 
-		logger.info("Messages fetched: " + messages);
+        List<ChatMessage> messages = chatMessageService.getMessagesByRoomId(roomId);
 
-		return ResponseEntity.ok(messages);
-	}
+        logger.info("Messages fetched: " + messages);
 
-	@MessageMapping("/message")
-	@SendTo("/topic/chatroom/{roomId}")
-	public ChatMessage handleMessage(ChatMessage message) {
-		logger.info("Message received from client: " + message);
-		return message;
-	}
+        return ResponseEntity.ok(messages);
+    }
 
-	@PostMapping("/ack")
-	public ResponseEntity<Void> acknowledgeMessage(@RequestBody Map<String, Object> ackData) {
-		String messageId = ackData.get("messageId").toString();
+    @MessageMapping("/message")
+    @SendTo("/topic/chatroom/{roomId}")
+    public ChatMessage handleMessage(ChatMessage message) {
+        logger.info("Message received from client: " + message);
+        return message;
+    }
 
-		// ACK 수신 로그 남기기
-		logger.info("ACK received for message ID: " + messageId);
+//    @PostMapping("/ack")
+//    public ResponseEntity<Void> acknowledgeMessage(@RequestBody Map<String, Object> ackData) {
+//        String messageId = ackData.get("messageId").toString();
+//
+//        logger.info("ACK received for message ID: " + messageId);
+//
+//        return ResponseEntity.ok().build();
+//    }
 
-		// ACK 처리 로직 추가 (예: 메시지 상태 업데이트 등)
-
-		return ResponseEntity.ok().build();
-	}
-
+    @GetMapping("/employee/{empno}")
+    public ResponseEntity<Employee> getEmployeeByEmpno(@PathVariable("empno") Long empno) {
+        Optional<Employee> employeeOpt = employeeService.getEmployeeByEmpno(empno);
+        return employeeOpt.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(404).build());
+    }
 }
