@@ -48,7 +48,7 @@ public class EmployeeController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@GetMapping("/api/employees/manager")
+	@GetMapping("manager")
     public ResponseEntity<Employee> getManagerByDeptNo(@RequestParam("deptno") int deptNo) {
         Optional<Employee> managerOpt = employeeService.getManagerByDeptNo(deptNo);
         if (managerOpt.isPresent()) {
