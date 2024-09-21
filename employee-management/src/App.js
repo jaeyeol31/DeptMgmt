@@ -15,7 +15,7 @@ import DepartmentBoardDetail from './department/DepartmentBoardDetail';
 import Login from './user/Login';
 import MyPage from './user/MyPage';
 import ChangePassword from './user/ChangePassword';
-import Home from './home/Home';  // Home 컴포넌트 경로 수정
+import Home from './home/Home';
 import authService from './services/authService';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -28,13 +28,11 @@ const Navbar = () => {
 	const navigate = useNavigate();
 	const empno = sessionStorage.getItem('empno');
 	const [timeLeft, setTimeLeft] = useState(null);
-	const [isExtended, setIsExtended] = useState(false); // 연장 여부를 저장
+	const [isExtended, setIsExtended] = useState(false);
 	const [showNotificationModal, setShowNotificationModal] = useState(false);
 
-	// 알림 모달 열기/닫기
 	const handleShowNotificationModal = () => setShowNotificationModal(true);
 	const handleCloseNotificationModal = () => setShowNotificationModal(false);
-
 
 	const handleLogout = () => {
 		authService.logout().then(() => {
@@ -61,7 +59,7 @@ const Navbar = () => {
 			const remainingTimeSec = Math.floor(remainingTimeMs / 1000);
 
 			if (remainingTimeMs > 0) {
-				setTimeLeft(remainingTimeSec);  // 남은 시간 설정
+				setTimeLeft(remainingTimeSec);
 			} else {
 				setTimeLeft(0);
 				alert('세션이 만료되었습니다. 다시 로그인해주세요.');
@@ -69,23 +67,21 @@ const Navbar = () => {
 				return;
 			}
 
-			// 세션 만료 3분(180초) 전에 한 번만 연장 여부를 물어봄
 			if (remainingTimeSec === 180 && empno && !isExtended) {
-				setIsExtended(true); // 연장을 물어본 상태로 설정
+				setIsExtended(true);
 				if (window.confirm('세션이 곧 만료됩니다. 연장하시겠습니까?')) {
 					axios.get('/api/auth/extend-session')
 						.then(() => {
 							const newSessionStartTime = Date.now();
 							sessionStorage.setItem('sessionStartTime', newSessionStartTime.toString());
-							setTimeLeft(Math.floor(sessionTimeout / 1000)); // 세션 타임아웃 초기화
+							setTimeLeft(Math.floor(sessionTimeout / 1000));
 							alert('세션이 연장되었습니다.');
-							setIsExtended(false); // 연장 후 다시 3분 전에 다시 물어보지 않도록 설정
+							setIsExtended(false);
 						})
 						.catch(error => {
 							console.error('세션 연장 중 오류가 발생했습니다.', error);
 						});
 				} else {
-					// 연장하지 않고 취소한 경우
 					alert('세션이 연장되지 않았습니다. 남은 시간 동안 계속 작업할 수 있습니다.');
 				}
 			}
@@ -95,14 +91,14 @@ const Navbar = () => {
 	};
 
 	useEffect(() => {
-		if (empno) { // 로그인한 상태에서만 세션 체크
-			const sessionTimeout = 3600000; // 1시간 (3600000 ms)
+		if (empno) {
+			const sessionTimeout = 3600000;
 			const sessionStartTime = Date.now();
 			sessionStorage.setItem('sessionStartTime', sessionStartTime.toString());
 			sessionStorage.setItem('sessionTimeout', sessionTimeout.toString());
 
-			const intervalId = setInterval(checkSessionTime, 1000); // 1초마다 체크
-			return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 clear
+			const intervalId = setInterval(checkSessionTime, 1000);
+			return () => clearInterval(intervalId);
 		}
 	}, [empno]);
 
@@ -129,7 +125,7 @@ const Navbar = () => {
 						<Link className="nav-link" to="/department-board">부서 게시판</Link>
 					</li>
 					<li className="nav-item">
-						<Link className="nav-link" to="/chat">채팅</Link> {/* 채팅 페이지 추가 */}
+						<Link className="nav-link" to="/chat">채팅</Link>
 					</li>
 					{empno ? (
 						<>
@@ -157,7 +153,6 @@ const Navbar = () => {
 					)}
 				</ul>
 			</div>
-			{/* 알림 모달 표시 */}
 			<NotificationModal
 				show={showNotificationModal}
 				onClose={handleCloseNotificationModal}

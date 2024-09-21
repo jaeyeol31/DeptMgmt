@@ -5,6 +5,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import { useLocation } from 'react-router-dom';
 
 let stompClient = null;
 
@@ -91,8 +92,7 @@ const ChatPage = () => {
     const [selectedEmployees, setSelectedEmployees] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
     const [employeeCache, setEmployeeCache] = useState({});
-    
-    // 채팅 메시지 영역에 대한 ref 생성
+    const location = useLocation();
     const messagesEndRef = useRef(null);
 
     useEffect(() => {
@@ -103,29 +103,30 @@ const ChatPage = () => {
     useEffect(() => {
         if (selectedChatRoom && stompClient && stompClient.connected) {
             const subscription = stompClient.subscribe(`/topic/chatroom/${selectedChatRoom.id}`, onMessageReceived);
-            console.log(`Subscribed to chat room ID: ${selectedChatRoom.id}`);
             return () => subscription.unsubscribe();
         }
     }, [selectedChatRoom]);
 
-    // 메시지가 추가될 때마다 스크롤을 맨 아래로 이동
+    useEffect(() => {
+        const roomIdFromUrl = location.state?.roomId;
+        if (roomIdFromUrl && chatRooms.length > 0) {
+            const roomToSelect = chatRooms.find(room => room.id === Number(roomIdFromUrl));
+            if (roomToSelect) {
+                openChatRoom(roomToSelect);
+            }
+        }
+    }, [location.state, chatRooms]);
+
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
 
     const connect = () => {
-        console.log("Attempting to connect to WebSocket...");
         const socket = new SockJS('http://localhost:8080/ws');
         stompClient = new Client({
             webSocketFactory: () => socket,
             reconnectDelay: 5000,
             onConnect: onConnected,
-            onStompError: (frame) => {
-                console.error("STOMP Error:", frame.headers['message'], frame.body);
-            },
-            onDisconnect: () => console.log("WebSocket disconnected"),
-            onWebSocketError: (error) => console.error("WebSocket error:", error),
-            onWebSocketClose: () => console.log("WebSocket closed"),
         });
         stompClient.activate();
     };
@@ -135,18 +136,10 @@ const ChatPage = () => {
     };
 
     const onMessageReceived = async (message) => {
-        console.log("Raw message received:", message);
         if (message.body) {
             const newMessage = JSON.parse(message.body);
-            console.log("Parsed message:", newMessage);
-
             const senderName = await fetchEmployeeName(newMessage.senderId);
-
             setMessages((prevMessages) => [...prevMessages, { ...newMessage, senderName }]);
-
-            console.log("Messages state updated:", messages);
-        } else {
-            console.warn("Received message has no body:", message);
         }
     };
 
@@ -169,31 +162,19 @@ const ChatPage = () => {
                 content: messageContent,
                 createdAt: new Date().toISOString(),
             };
-            console.log("Sending message:", chatMessage);
-
             stompClient.publish({
                 destination: '/pub/message',
                 body: JSON.stringify(chatMessage),
             });
 
-            console.log("Message published to WebSocket");
-
-            const response = await fetch('http://localhost:8080/api/messages/send', {
+            await fetch('http://localhost:8080/api/messages/send', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(chatMessage),
             });
 
-            const result = await response.json();
-            console.log("Message saved on server:", result);
-
             setMessageInput('');
-
             fetchMessages(selectedChatRoom.id);
-        } else {
-            console.warn("Message content empty or STOMP client not connected");
         }
     };
 
@@ -202,12 +183,10 @@ const ChatPage = () => {
             const response = await fetch(`http://localhost:8080/api/messages/room/${roomId}`);
             const data = await response.json();
             const sortedMessages = data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-            console.log("Messages fetched and sorted:", sortedMessages);
 
             for (const message of sortedMessages) {
                 message.senderName = await fetchEmployeeName(message.senderId);
             }
-
             setMessages(sortedMessages);
         } catch (error) {
             console.error('Failed to fetch messages:', error);
@@ -218,7 +197,6 @@ const ChatPage = () => {
         try {
             const response = await fetch(`http://localhost:8080/api/chat/rooms/participant?participant=${sessionStorage.getItem('empno')}`);
             const data = await response.json();
-            console.log("Chat rooms fetched:", data);
             setChatRooms(data);
         } catch (error) {
             console.error('Failed to fetch chat rooms:', error);
@@ -227,18 +205,13 @@ const ChatPage = () => {
 
     const handleSearch = async (e) => {
         setEmployeeName(e.target.value);
-        try {
-            if (e.target.value.length > 1) {
-                const encodedName = encodeURIComponent(e.target.value);
-                const response = await fetch(`http://localhost:8080/api/employees/search?name=${encodedName}`);
-                const employees = await response.json();
-                console.log("Search results:", employees);
-                setSearchResults(employees);
-            } else {
-                setSearchResults([]);
-            }
-        } catch (error) {
-            console.error('Failed to search employees:', error);
+        if (e.target.value.length > 1) {
+            const encodedName = encodeURIComponent(e.target.value);
+            const response = await fetch(`http://localhost:8080/api/employees/search?name=${encodedName}`);
+            const employees = await response.json();
+            setSearchResults(employees);
+        } else {
+            setSearchResults([]);
         }
     };
 
@@ -249,7 +222,6 @@ const ChatPage = () => {
         } else {
             setSelectedEmployees([...selectedEmployees, employee]);
         }
-        console.log("Selected employees:", selectedEmployees);
     };
 
     const handleStartChat = async () => {
@@ -258,44 +230,18 @@ const ChatPage = () => {
 
         if (filteredEmployees.length > 0) {
             const participantEmpnos = filteredEmployees.map((emp) => emp.empno).join(',');
-            console.log("Starting chat with participants:", participantEmpnos);
-
-            const response = await fetch(`http://localhost:8080/api/chat/create?participants=${participantEmpnos}&empnoSelf=${empnoSelf}`, {
-                method: 'POST',
-            });
-
-            if (response.ok) {
-                fetchChatRooms();
-                setSelectedEmployees([]);
-            } else {
-                console.error('Failed to create chat room');
-            }
+            await fetch(`http://localhost:8080/api/chat/create?participants=${participantEmpnos}&empnoSelf=${empnoSelf}`, { method: 'POST' });
+            fetchChatRooms();
+            setSelectedEmployees([]);
         } else {
             alert("본인과는 채팅할 수 없습니다.");
         }
     };
 
     const openChatRoom = (room) => {
-        console.log("Opening chat room:", room);
         setSelectedChatRoom(room);
         setMessages([]);
         fetchMessages(room.id);
-    };
-
-    const formatDate = (date) => {
-        return new Date(date).toLocaleDateString('ko-KR', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            weekday: 'long',
-        });
-    };
-
-    const formatTime = (date) => {
-        return new Date(date).toLocaleTimeString('ko-KR', {
-            hour: '2-digit',
-            minute: '2-digit',
-        });
     };
 
     const renderMessages = () => {
@@ -304,13 +250,12 @@ const ChatPage = () => {
         return messages.map((msg, index) => {
             const messageDate = new Date(msg.createdAt).setHours(0, 0, 0, 0);
             const shouldShowDateLabel = !lastMessageDate || messageDate !== lastMessageDate;
-
             lastMessageDate = messageDate;
 
             return (
                 <React.Fragment key={index}>
                     {shouldShowDateLabel && (
-                        <div style={styles.dateLabel}>{formatDate(msg.createdAt)}</div>
+                        <div style={styles.dateLabel}>{new Date(msg.createdAt).toLocaleDateString()}</div>
                     )}
                     <div
                         style={{
@@ -323,7 +268,7 @@ const ChatPage = () => {
                         <Card>
                             <Card.Header>
                                 {msg.senderName}
-                                <span style={styles.timeLabel}>{formatTime(msg.createdAt)}</span>
+                                <span style={styles.timeLabel}>{new Date(msg.createdAt).toLocaleTimeString()}</span>
                             </Card.Header>
                             <Card.Body>{msg.content}</Card.Body>
                         </Card>
@@ -333,7 +278,6 @@ const ChatPage = () => {
         });
     };
 
-    // 최신 메시지로 스크롤하는 함수
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -356,7 +300,7 @@ const ChatPage = () => {
                         <ListGroup.Item key={employee.empno}>
                             <Form.Check
                                 type="checkbox"
-                                label={`${employee.ename} (사원번호: ${employee.empno}, 직급: ${employee.job})`}
+                                label={`${employee.ename} (사원번호: ${employee.empno})`}
                                 checked={!!selectedEmployees.find((e) => e.empno === employee.empno)}
                                 onChange={() => handleCheckboxChange(employee)}
                             />
@@ -369,15 +313,13 @@ const ChatPage = () => {
                         <h5>선택된 사용자:</h5>
                         <ul>
                             {selectedEmployees.map((emp) => (
-                                <li key={emp.empno}>{`${emp.ename} (사원번호: ${emp.empno}, 직급: ${emp.job})`}</li>
+                                <li key={emp.empno}>{`${emp.ename} (사원번호: ${emp.empno})`}</li>
                             ))}
                         </ul>
                     </div>
                 )}
 
-                <Button variant="primary" onClick={handleStartChat} className="mt-3">
-                    채팅 시작
-                </Button>
+                <Button variant="primary" onClick={handleStartChat}>채팅 시작</Button>
 
                 <h3 className="mt-4">내 채팅방</h3>
                 <ListGroup variant="flush">
@@ -395,7 +337,6 @@ const ChatPage = () => {
                 </div>
                 <div style={styles.chatMessages}>
                     {renderMessages()}
-                    {/* 메시지 끝에 ref 추가 */}
                     <div ref={messagesEndRef}></div>
                 </div>
                 <div style={styles.chatInputArea}>
@@ -406,9 +347,7 @@ const ChatPage = () => {
                         placeholder="메시지 입력..."
                         style={styles.chatInput}
                     />
-                    <Button variant="primary" onClick={sendMessage}>
-                        전송
-                    </Button>
+                    <Button variant="primary" onClick={sendMessage}>전송</Button>
                 </div>
             </div>
         </div>
