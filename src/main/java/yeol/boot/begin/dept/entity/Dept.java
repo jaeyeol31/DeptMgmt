@@ -15,7 +15,7 @@ public class Dept {
 
     @Id
     @Column(name = "deptno")
-    private Integer deptno;  // 자동 생성이 아닌 수동 입력으로 변경
+    private Integer deptno; 
 
     @Column(name = "dname")
     private String dname;

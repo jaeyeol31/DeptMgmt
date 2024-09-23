@@ -19,19 +19,32 @@ const NotificationModal = ({ show, onClose, empno }) => {
         }
     }, [empno, show]);
 
+    // 알림을 클릭하여 읽음 처리 후, 상태 업데이트 및 페이지 이동
     const handleNotificationClick = (notificationId, targetUrl) => {
         axios.get(`/api/notifications/${notificationId}`)
             .then(() => {
+                // 읽음 처리 후 알림 상태 업데이트
+                setNotifications(prevNotifications =>
+                    prevNotifications.map(notification =>
+                        notification.id === notificationId
+                            ? { ...notification, read: true }
+                            : notification
+                    )
+                );
+                // 모달 창 닫기
+                onClose();
+                // 알림 URL로 이동
                 const roomId = targetUrl.split('/').pop();
                 navigate('/chat', { state: { roomId } });
             })
             .catch(error => console.error('Error marking notification as read:', error));
     };
 
+    // 알림 삭제 함수
     const handleDeleteNotification = (notificationId) => {
-        axios.post(`/api/notifications/delete/${notificationId}`)
+        axios.post(`/api/notifications/delete/${notificationId}/${empno}`)
             .then(() => {
-                // 알림 삭제 후 다시 목록 불러오기
+                // 알림 삭제 후 목록 업데이트
                 setNotifications(notifications.filter(notification => notification.id !== notificationId));
             })
             .catch(error => console.error('Error deleting notification:', error));
@@ -55,7 +68,13 @@ const NotificationModal = ({ show, onClose, empno }) => {
                                     <strong>{notification.notificationType}:</strong> {notification.content}
                                 </div>
                                 <div>
-                                    <small>{new Date(notification.createdAt).toLocaleString()}</small>
+                                    <small>{new Date(notification.createdAt).toLocaleDateString('ko-KR', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    })}</small>
                                     <Button
                                         variant="danger"
                                         size="sm"
