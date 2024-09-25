@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import SockJS from 'sockjs-client';
-import { Client } from '@stomp/stompjs';
-import ListGroup from 'react-bootstrap/ListGroup';
+import SockJS from 'sockjs-client';  // SockJS는 WebSocket을 사용하는 클라이언트를 위한 JavaScript 라이브러리
+import { Client } from '@stomp/stompjs';  // STOMP 클라이언트 라이브러리, 메시지 전송을 위한 프로토콜
+import ListGroup from 'react-bootstrap/ListGroup';  // 부트스트랩 컴포넌트
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';  // 현재 URL의 state를 사용하기 위한 hook
 
-let stompClient = null;
+let stompClient = null;  // STOMP 클라이언트를 전역적으로 사용하기 위한 변수
 
 const styles = {
     chatPage: {
@@ -84,185 +84,203 @@ const styles = {
 };
 
 const ChatPage = () => {
-    const [messages, setMessages] = useState([]);
-    const [messageInput, setMessageInput] = useState('');
-    const [employeeName, setEmployeeName] = useState('');
-    const [chatRooms, setChatRooms] = useState([]);
-    const [selectedChatRoom, setSelectedChatRoom] = useState(null);
-    const [selectedEmployees, setSelectedEmployees] = useState([]);
-    const [searchResults, setSearchResults] = useState([]);
-    const [employeeCache, setEmployeeCache] = useState({});
-    const location = useLocation();
-    const messagesEndRef = useRef(null);
+    // 상태 변수 정의
+    const [messages, setMessages] = useState([]);  // 현재 채팅방의 메시지 목록
+    const [messageInput, setMessageInput] = useState('');  // 입력된 메시지 내용
+    const [employeeName, setEmployeeName] = useState('');  // 검색된 직원 이름
+    const [chatRooms, setChatRooms] = useState([]);  // 참여 중인 채팅방 목록
+    const [selectedChatRoom, setSelectedChatRoom] = useState(null);  // 현재 선택된 채팅방
+    const [selectedEmployees, setSelectedEmployees] = useState([]);  // 채팅에 초대할 직원 목록
+    const [searchResults, setSearchResults] = useState([]);  // 검색 결과로 나타나는 직원 목록
+    const [employeeCache, setEmployeeCache] = useState({});  // 직원 이름 캐시, API 호출을 줄이기 위해 사용
+    const location = useLocation();  // URL 상태에 접근하여 roomId를 받기 위한 hook
+    const messagesEndRef = useRef(null);  // 메시지 목록의 끝부분을 가리키는 참조 변수 (scroll 조작용)
 
+    // 첫 렌더링 시 WebSocket 연결 및 채팅방 목록 가져오기
     useEffect(() => {
-        connect();
-        fetchChatRooms();
+        connect();  // WebSocket 연결
+        fetchChatRooms();  // 채팅방 목록 가져오기
     }, []);
 
+    // 선택된 채팅방이 있을 경우 해당 채팅방의 메시지를 구독
     useEffect(() => {
         if (selectedChatRoom && stompClient && stompClient.connected) {
             const subscription = stompClient.subscribe(`/topic/chatroom/${selectedChatRoom.id}`, onMessageReceived);
-            return () => subscription.unsubscribe();
+            return () => subscription.unsubscribe();  // 채팅방이 바뀌거나 연결이 끊기면 구독 해제
         }
     }, [selectedChatRoom]);
 
+    // URL로 전달받은 roomId가 있을 경우 해당 채팅방 자동으로 열기
     useEffect(() => {
-        const roomIdFromUrl = location.state?.roomId;
+        const roomIdFromUrl = location.state?.roomId;  // URL로부터 roomId 추출
         if (roomIdFromUrl && chatRooms.length > 0) {
             const roomToSelect = chatRooms.find(room => room.id === Number(roomIdFromUrl));
             if (roomToSelect) {
-                openChatRoom(roomToSelect);
+                openChatRoom(roomToSelect);  // roomId에 해당하는 채팅방 열기
             }
         }
     }, [location.state, chatRooms]);
 
+    // 메시지가 추가되면 스크롤을 가장 아래로 자동으로 이동
     useEffect(() => {
-        scrollToBottom();
+        scrollToBottom();  
     }, [messages]);
 
+    // WebSocket 연결 설정 함수
     const connect = () => {
-        const socket = new SockJS('http://localhost:8080/ws');
+        const socket = new SockJS('http://localhost:8080/ws');  // WebSocket 서버 URL
         stompClient = new Client({
             webSocketFactory: () => socket,
-            reconnectDelay: 5000,
-            onConnect: onConnected,
+            reconnectDelay: 5000,  // 재연결 시도 시간 설정
+            onConnect: onConnected,  // 연결 성공 시 호출될 함수
         });
-        stompClient.activate();
+        stompClient.activate();  // WebSocket 연결 활성화
     };
 
+    // WebSocket 연결 성공 시 호출되는 함수
     const onConnected = () => {
         console.log("Connected to WebSocket");
     };
 
+    // 메시지를 수신했을 때 호출되는 함수
     const onMessageReceived = async (message) => {
         if (message.body) {
-            const newMessage = JSON.parse(message.body);
-            const senderName = await fetchEmployeeName(newMessage.senderId);
-            setMessages((prevMessages) => [...prevMessages, { ...newMessage, senderName }]);
+            const newMessage = JSON.parse(message.body);  // 수신된 메시지 파싱
+            const senderName = await fetchEmployeeName(newMessage.senderId);  // 발신자 이름 가져오기
+            setMessages((prevMessages) => [...prevMessages, { ...newMessage, senderName }]);  // 메시지 추가
         }
     };
 
+    // 사원 이름을 캐시 또는 서버에서 가져오는 함수
     const fetchEmployeeName = async (empno) => {
         if (employeeCache[empno]) {
-            return employeeCache[empno];
+            return employeeCache[empno];  // 이미 캐시에 있는 경우 캐시에서 이름 반환
         }
-        const response = await fetch(`/api/messages/employee/${empno}`);
+        const response = await fetch(`/api/messages/employee/${empno}`);  // 서버에 요청하여 이름 가져오기
         const employee = await response.json();
-        setEmployeeCache(prevCache => ({ ...prevCache, [empno]: employee.ename }));
+        setEmployeeCache(prevCache => ({ ...prevCache, [empno]: employee.ename }));  // 캐시에 저장
         return employee.ename;
     };
 
+    // 메시지를 서버로 전송하는 함수
     const sendMessage = async () => {
-        const messageContent = messageInput.trim();
+        const messageContent = messageInput.trim();  // 입력된 메시지의 공백 제거
         if (messageContent && stompClient && selectedChatRoom) {
             const chatMessage = {
-                senderId: sessionStorage.getItem('empno'),
-                roomId: selectedChatRoom.id,
-                content: messageContent,
-                createdAt: new Date().toISOString(),
+                senderId: sessionStorage.getItem('empno'),  // 현재 로그인한 사원의 ID
+                roomId: selectedChatRoom.id,  // 현재 선택된 채팅방 ID
+                content: messageContent,  // 전송할 메시지 내용
+                createdAt: new Date().toISOString(),  // 메시지 전송 시간
             };
             stompClient.publish({
-                destination: '/pub/message',
-                body: JSON.stringify(chatMessage),
+                destination: '/pub/message',  // 메시지를 전송할 경로
+                body: JSON.stringify(chatMessage),  // 메시지를 JSON 형식으로 변환하여 전송
             });
 
+            // 서버에 메시지 저장 요청
             await fetch('http://localhost:8080/api/messages/send', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(chatMessage),
+                body: JSON.stringify(chatMessage),  // 메시지 내용을 요청 바디에 포함
             });
 
-            setMessageInput('');
-            fetchMessages(selectedChatRoom.id);
+            setMessageInput('');  // 메시지 입력창 초기화
+            fetchMessages(selectedChatRoom.id);  // 최신 메시지 목록 가져오기
         }
     };
 
+    // 특정 채팅방의 메시지를 서버에서 가져오는 함수
     const fetchMessages = async (roomId) => {
         try {
             const response = await fetch(`http://localhost:8080/api/messages/room/${roomId}`);
             const data = await response.json();
-            const sortedMessages = data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+            const sortedMessages = data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));  // 메시지를 시간순으로 정렬
 
             for (const message of sortedMessages) {
-                message.senderName = await fetchEmployeeName(message.senderId);
+                message.senderName = await fetchEmployeeName(message.senderId);  // 각 메시지의 발신자 이름을 가져옴
             }
-            setMessages(sortedMessages);
+            setMessages(sortedMessages);  // 메시지 상태 업데이트
         } catch (error) {
-            console.error('Failed to fetch messages:', error);
+            console.error('Failed to fetch messages:', error);  // 메시지 가져오기 실패 시 에러 로그 출력
         }
     };
 
+    // 현재 사원이 속한 채팅방 목록을 가져오는 함수
     const fetchChatRooms = async () => {
         try {
             const response = await fetch(`http://localhost:8080/api/chat/rooms/participant?participant=${sessionStorage.getItem('empno')}`);
             const data = await response.json();
-            setChatRooms(data);
+            setChatRooms(data);  // 채팅방 목록 업데이트
         } catch (error) {
-            console.error('Failed to fetch chat rooms:', error);
+            console.error('Failed to fetch chat rooms:', error);  // 채팅방 목록 가져오기 실패 시 에러 로그 출력
         }
     };
 
+    // 사원 이름을 검색하는 함수
     const handleSearch = async (e) => {
         setEmployeeName(e.target.value);
-        if (e.target.value.length > 1) {
-            const encodedName = encodeURIComponent(e.target.value);
+        if (e.target.value.length > 1) {  // 검색어가 2글자 이상일 때만 검색 수행
+            const encodedName = encodeURIComponent(e.target.value);  // 검색어 URL 인코딩
             const response = await fetch(`http://localhost:8080/api/employees/search?name=${encodedName}`);
             const employees = await response.json();
-            setSearchResults(employees);
+            setSearchResults(employees);  // 검색 결과 업데이트
         } else {
-            setSearchResults([]);
+            setSearchResults([]);  // 검색어가 짧으면 결과 초기화
         }
     };
 
+    // 선택한 사원을 채팅에 초대할 목록에 추가/제거하는 함수
     const handleCheckboxChange = (employee) => {
         const alreadySelected = selectedEmployees.find((e) => e.empno === employee.empno);
         if (alreadySelected) {
-            setSelectedEmployees(selectedEmployees.filter((e) => e.empno !== employee.empno));
+            setSelectedEmployees(selectedEmployees.filter((e) => e.empno !== employee.empno));  // 이미 선택된 사원은 목록에서 제거
         } else {
-            setSelectedEmployees([...selectedEmployees, employee]);
+            setSelectedEmployees([...selectedEmployees, employee]);  // 선택되지 않은 사원은 목록에 추가
         }
     };
 
+    // 선택된 사원들과 새로운 채팅방을 생성하는 함수
     const handleStartChat = async () => {
-        const empnoSelf = sessionStorage.getItem('empno');
-        const filteredEmployees = selectedEmployees.filter((emp) => emp.empno !== empnoSelf);
+        const empnoSelf = sessionStorage.getItem('empno');  // 현재 로그인한 사원 번호
+        const filteredEmployees = selectedEmployees.filter((emp) => emp.empno !== empnoSelf);  // 본인을 제외한 사원들만 필터링
 
         if (filteredEmployees.length > 0) {
             const participantEmpnos = filteredEmployees.map((emp) => emp.empno).join(',');
             await fetch(`http://localhost:8080/api/chat/create?participants=${participantEmpnos}&empnoSelf=${empnoSelf}`, { method: 'POST' });
-            fetchChatRooms();
-            setSelectedEmployees([]);
+            fetchChatRooms();  // 채팅방 목록 다시 가져오기
+            setSelectedEmployees([]);  // 선택된 사원 목록 초기화
         } else {
-            alert("본인과는 채팅할 수 없습니다.");
+            alert("본인과는 채팅할 수 없습니다.");  // 본인을 선택한 경우 경고 메시지
         }
     };
 
+    // 채팅방을 열고 메시지 목록을 가져오는 함수
     const openChatRoom = (room) => {
-        setSelectedChatRoom(room);
-        setMessages([]);
-        fetchMessages(room.id);
+        setSelectedChatRoom(room);  // 선택된 채팅방 설정
+        setMessages([]);  // 메시지 목록 초기화
+        fetchMessages(room.id);  // 해당 채팅방의 메시지 가져오기
     };
 
+    // 메시지 렌더링 함수
     const renderMessages = () => {
-        let lastMessageDate = null;
+        let lastMessageDate = null;  // 마지막 메시지의 날짜
 
         return messages.map((msg, index) => {
-            const messageDate = new Date(msg.createdAt).setHours(0, 0, 0, 0);
-            const shouldShowDateLabel = !lastMessageDate || messageDate !== lastMessageDate;
+            const messageDate = new Date(msg.createdAt).setHours(0, 0, 0, 0);  // 메시지의 날짜만 추출
+            const shouldShowDateLabel = !lastMessageDate || messageDate !== lastMessageDate;  // 날짜가 바뀌었는지 확인
             lastMessageDate = messageDate;
 
             return (
                 <React.Fragment key={index}>
                     {shouldShowDateLabel && (
-                        <div style={styles.dateLabel}>{new Date(msg.createdAt).toLocaleDateString()}</div>
+                        <div style={styles.dateLabel}>{new Date(msg.createdAt).toLocaleDateString()}</div>  // 날짜 라벨 표시
                     )}
                     <div
                         style={{
                             ...styles.chatMessage,
                             ...(msg.senderId === parseInt(sessionStorage.getItem('empno'))
                                 ? styles.sent
-                                : styles.received),
+                                : styles.received),  // 메시지를 보낸 사람이 현재 로그인한 사용자와 같은지 확인
                         }}
                     >
                         <Card>
@@ -278,6 +296,7 @@ const ChatPage = () => {
         });
     };
 
+    // 메시지 목록의 끝으로 스크롤하는 함수
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
