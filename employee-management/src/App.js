@@ -22,6 +22,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './assets/images/logo.png';
 import ChatPage from './chat/ChatPage';
 import NotificationModal from './notifications/NotificationModal';
+import SupplierList from './supplier/SupplierList';
+import SupplierDetail from './supplier/SupplierDetail';
+import SupplierForm from './supplier/SupplierForm';
 
 
 const Navbar = () => {
@@ -119,6 +122,9 @@ const Navbar = () => {
 						<Link className="nav-link" to="/departments">부서 목록</Link>
 					</li>
 					<li className="nav-item">
+						<Link className="nav-link" to="/suppliers">거래처</Link>
+					</li>
+					<li className="nav-item">
 						<Link className="nav-link" to="/notices">공지사항</Link>
 					</li>
 					<li className="nav-item">
@@ -206,6 +212,10 @@ const App = () => {
 					<Route path="/mypage" element={<MyPage />} />
 					<Route path="/change-password" element={<ChangePassword />} />
 					<Route path="/chat" element={<ChatPage />} />
+					<Route path="/suppliers" element={<SupplierList />} />
+					<Route path="/suppliers/add" element={<SupplierForm />} />
+					<Route path="/suppliers/edit/:id" element={<SupplierForm />} />
+					<Route path="/suppliers/detail/:id" element={<SupplierDetail />} />
 				</Routes>
 			</div>
 		</Router>
